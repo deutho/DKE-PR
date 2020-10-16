@@ -1,0 +1,130 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Registrieren</title>
+<!-- Theme file -->
+<link href="css/style2.css" rel="stylesheet" type="text/css" media="all"/>
+<!-- Theme file -->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+
+<!--Google Fonts-->
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<!--Google Fonts-->
+<script type="text/javascript">
+ 
+    
+function checkFormular() 
+	{
+		var foundError=false;
+		var a = "";
+		var param = checkFormular.arguments;
+		for(var i =  1; i < param.length; i++)
+		{
+			
+			
+			if(document.getElementById(param[i]).value=="")
+			{
+				foundError =true;
+				a+="Bitte fuellen Sie folgende Felder aus:" + param[i]+ "\n";
+			
+			}
+		
+		}
+
+		
+		if (document.getElementById("Email").value == "")
+		{
+			a += "Bitte geben Sie Ihre E-Mail Adresse ein! \n";
+			document.frm.Email.focus();
+			foundError = true;
+		}	
+		if (document.getElementById("Passwort").value == "") 
+		{
+			a += ("Bitte geben Sie Ihr Passwort ein! \n");
+			document.frm.Passwort.focus();
+			foundError = true;
+		}
+		else 
+		{
+			if(document.getElementById("Passwort").value != document.getElementById("PWD2").value)
+			{
+			
+				a += ("Passwoerter stimmen nicht ¸ueberein! \n");
+				document.frm.PWD2.focus();
+				foundError = true;
+			}
+		}
+		
+		
+		if (document.getElementById("Vorname").value == "") 
+		{
+			a += ("Bitte geben Sie Ihren Vornamen ein! \n");
+			document.frm.Vorname.focus();
+			foundError = true;
+		}
+		
+		if (document.getElementById("Nachname").value == "") 
+		{
+			a += ("Bitte geben Sie Ihren Nachnamen ein! \n");
+			document.frm.Nachname.focus();
+			foundError = true;
+			
+		}
+		
+		if (!foundError)
+		{
+			
+			return true;
+			
+			
+		}
+		
+		else 
+		{
+			alert(a);
+			return false;
+		}
+		
+		
+	}
+	    
+    
+    </script>
+</head>
+<body>
+
+<h1>Registrieren</h1>
+<div class="singup">
+		<h3>Account erstellen</h3>
+	<div class="signup-main">
+	  <form name="frm" id= "frm" method="post" onsubmit="return checkFormular('frm','Email','Passwort');" action="registrieren.php">
+          
+
+        <fieldset>
+		
+          
+        <input type="text" value="Vorname"  onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Vorname';}"  name="Vorname" id="Vorname"/>
+		<input type="text" value="Nachname" class="lessgap"  onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Nachname';}" name="Nachname" id="Nachname"/>
+       <input type="text" value="Email" class="email" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email';}" name="Email" id="Email"/>
+		
+        <input type="password" value="Passwort"  onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Passwort';}" name="Passwort" id="Passwort">
+        <input type="password" value="Passwort bestätigen" class="lessgap" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Passwort bestätigen';}" name="PWD2" id="PWD2">
+		
+          
+        </fieldset>  
+	  <div class="send-button">
+	    <input  type="submit" value="Registrieren" >
+	  </div>
+	    <p>Haben Sie schon einen Account?  <a href="index.html">Einloggen</a></p>
+	  </form>
+	</div>
+</div>	
+<div class="copyright">
+
+</div>
+
+</body>
+</html>
