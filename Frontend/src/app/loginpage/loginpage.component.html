@@ -1,1 +1,25 @@
-<p>loginpage works!</p>
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+      <!-- Tabs Titles -->
+      <h2 class="active"> Anmelden </h2>
+      <a routerLink="/register" routerLinkActive="active"><h2 class="inactive underlineHover" >Registrieren </h2></a>
+  
+      <!-- Icon -->
+      <div class="fadeIn first">
+        <div class="fas fa-user" id="icon" alt="User Icon"></div>
+      </div>
+  
+      <!-- Login Form -->
+      <form>
+        <input type="text" id="login" class="fadeIn second" name="login" placeholder="Benutzername">
+        <input type="text" id="password" class="fadeIn third" name="login" placeholder="Passwort">
+        <input type="submit" class="fadeIn fourth" value="Einloggen">
+      </form>
+  
+      <!-- Remind Passowrd -->
+      <div id="formFooter">
+        <a class="underlineHover">Passwort vergessen?</a>
+      </div>
+  
+    </div>
+  </div>
