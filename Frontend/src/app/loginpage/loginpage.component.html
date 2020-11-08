@@ -10,12 +10,13 @@
       </div>
   
       <!-- Login Form -->
+      
       <form>
-        <input type="text" id="login" class="fadeIn second" name="login" placeholder="Benutzername">
-        <input type="text" id="password" class="fadeIn third" name="login" placeholder="Passwort">
-        <input type="submit" class="fadeIn fourth" value="Einloggen">
+        <input type="text" id="email" class="fadeIn second" name="login" placeholder="E-Mail Adresse">
+        <input type="password" id="password" class="fadeIn third" name="login" placeholder="Passwort">
+        <input type="submit" class="fadeIn fourth" value="Einloggen" (click)="onSubmit()">
       </form>
-  
+    
       <!-- Remind Passowrd -->
       <div id="formFooter">
         <a class="underlineHover">Passwort vergessen?</a>
