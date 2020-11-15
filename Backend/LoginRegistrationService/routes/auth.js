@@ -11,9 +11,10 @@ const authController = require('../controller/auth');
 router.post(
     '/register',
     [
-        body('vorname').trim().not().isEmpty,
-        body('nachname').trim().not().isEmpty,
-        body('email').isEmail().withMessage('Bitte gültige Email eingeben')
+
+        body('vorname').trim().isLength({min: 1}),
+       body('nachname').trim().isLength({min: 1}),
+       body('email').isEmail().withMessage('Bitte gültige Email eingeben')
             .custom(async (email) => {
                 const user = await User.find(email);
                 if (user[0].length > 0) {
@@ -22,7 +23,7 @@ router.post(
             })
             .normalizeEmail(),
         body('passwort').trim().isLength({min: 8}),
-        body('geburtstrag').isDate().withMessage('Bitte gültiges Datum eingeben'),
+        body('geburtstag').isDate().withMessage('Bitte gültiges Datum eingeben'),
 
     ],
     authController.register

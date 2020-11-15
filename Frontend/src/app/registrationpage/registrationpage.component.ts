@@ -20,8 +20,9 @@ export class RegistrationpageComponent implements OnInit {
     let email :string = (<HTMLInputElement>document.getElementById('email')).value;
     let password :string = (<HTMLInputElement>document.getElementById('password')).value;
     let dateOfBirth :string = (<HTMLInputElement>document.getElementById('dateOfBirth')).value;
-    
+
     //Do some registration service stuff
+
 
     //redirect on successfull registration
     this.router.navigate(['/login'])
