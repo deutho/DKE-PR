@@ -247,6 +247,11 @@ animation-delay: 1.4s;
     -moz-animation-delay: 1.6s;
     animation-delay: 1.6s;
     }
+.fadeIn.eighth {
+  -webkit-animation-delay: 1.8s;
+  -moz-animation-delay: 1.8s;
+  animation-delay: 1.8s;
+  }
   
 
 /* Simple CSS3 Fade-in Animation */
