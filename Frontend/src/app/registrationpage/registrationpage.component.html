@@ -10,15 +10,20 @@
       </div>
   
       <!-- Login Form -->
-      <form>
-        <input type="text" id="firstname" class="fadeIn second" name="login" placeholder="Vorname">
-        <input type="text" id="lastname" class="fadeIn third" name="login" placeholder="Nachname">
-        <input type="text" id="email" class="fadeIn fourth" name="login" placeholder="E-Mail Adresse">        
-        <input type="password" id="password" class="fadeIn five" name="login" placeholder="Passwort">
-        <input type="password" id="password" class="fadeIn sixth" name="login" placeholder="Passwort bestätigen">
-        <input type="text" id="dateOfBirth" class="fadeIn seventh" name="login" placeholder="Geburtsdatum (TT.MM.JJJJ)">
-        <input type="submit" class="fadeIn eighth" value="Registrieren" (click)="onSubmit()">
-      </form>
+      <!-- <form>       -->
+      <input type="text" id="firstname" class="fadeIn second" name="login" placeholder="Vorname" >
+      <input type="text" id="lastname" class="fadeIn third" name="login" placeholder="Nachname">
+      <input type="text" id="email" class="fadeIn fourth" name="login" placeholder="E-Mail Adresse" >        
+      <input type="password" id="password" class="fadeIn five" name="login" placeholder="Passwort" autocomplete="new-password">
+      <!-- TODO implement check in ts -->
+      <input type="password" id="passwordConfirmation" class="fadeIn sixth" name="login" placeholder="Passwort bestätigen">
+      <input type="text" id="dateOfBirth" class="fadeIn seventh" name="login" placeholder="Geburtsdatum (TT.MM.JJJJ)">
+      <input type="submit" class="fadeIn eighth" value="Registrieren" (click)="onSubmit()">
+      <!-- </form> -->
+
+      <div *ngIf = "this.successfullyRegistered == true" class="item-final alert alert-success text-center" role="alert" style="width: 80%; margin:0 auto;">
+        Erfolgreich registriert!
+      </div>
 
   
     </div>
