@@ -1,11 +1,14 @@
 package com.example.accessingdataneo4j;
 
-public class ApplicationTest {
+import java.util.List;
+import java.util.ListIterator;
+
+public class RunTestData {
 
     public static void main( String... args ) throws Exception
     {
         //STATEMENTS
-        try ( GraphDBTransactions person = new GraphDBTransactions( "bolt://localhost:7687", "neo4j", "secret" ) )
+        try ( GraphDBTransactions person = new GraphDBTransactions() )
         {
             //DELETE all nodes before starting test
             person.emptyDB();
@@ -35,9 +38,17 @@ public class ApplicationTest {
             person.follows(3, 9);
             person.follows(3, 6);
             person.follows(4, 3);
+//
+//            //TEST DELETE
+//            person.delete(5);
+//            person.delete(4);
 
-            //TEST DELETE
-            person.delete(5);
+            List<Person> persons = person.getAllPersons();
+            ListIterator li = persons.listIterator();
+            while(li.hasNext()){
+               Person p = (Person) li.next();
+               System.out.println(p.getId_person() + "/" +  p.getName());
+            }
         }
     }
 }
