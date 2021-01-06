@@ -24,7 +24,23 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/global-css/animate.css",
+              "src/global-css/bootstrap.css",
+              "src/global-css/bootstrap.min.css",
+              "src/global-css/flatpickr.min.css",
+              "src/global-css/font-awesome.min.css",
+              "src/global-css/jquery.mCustomScrollbar.min.css",
+              "src/global-css/jquery.range.css",
+              "src/global-css/line-awesome-font-awesome.css",
+              "src/global-css/line-awesome-font-awesome.min.css",
+              "src/global-css/line-awesome.css",
+              "src/global-css/line-awesome.min.css",
+              "src/global-css/responsive.css",              
+              "src/global-css/style.css",              
+              "src/lib/slick/slick.css",
+              "src/lib/slick/slick-theme.css",
+              "src/vendor/fontawesome-free/css/all.min.css"
             ],
             "scripts": []
           },

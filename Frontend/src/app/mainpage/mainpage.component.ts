@@ -12,4 +12,14 @@ export class MainpageComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  newPost(){
+    document.getElementById("popup").classList.add("active");
+    document.getElementById("wrapper").classList.add("overlay");
+  }
+
+  removeOverlay(){
+    document.getElementById("popup").classList.remove("active");
+    document.getElementById("wrapper").classList.remove("overlay");
+  }
+
 }
