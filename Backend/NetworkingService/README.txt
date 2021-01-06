@@ -1,10 +1,13 @@
 neo4j configuration:
 
-    - run neo4j in docker
-        -  docker command: docker run --publish=7474:7474 --publish=7687:7687 -e 'NEO4J_AUTH=neo4j/secret' neo4j:4.1
+    - Run neo4j server:
+         1. alternative in docker
+             -  docker command: docker run --publish=7474:7474 --publish=7687:7687 -e 'NEO4J_AUTH=neo4j/secret' neo4j:4.1
+         2. alternative neo4j desktop version
+
     - open localhost:7474
-    - neo4j username: neo4j
-    - neo4j password: secret
+        - login to database (name: neo4j, password: secret)
+
     - install maven dependencies
-    - run Application Test
-    - GraphDB generated on localhost:7474
+    - run RunTestData for some test entries
+    - test REST APIs of PersonController
