@@ -29,6 +29,7 @@ export class MainpageComponent implements OnInit {
 
   removeAllOverlays() {
     document.getElementById("notification").style.display = "none";
+    document.getElementById("users").style.display = "none";
     this.overlayIsActive = false;
   }
 
@@ -38,6 +39,11 @@ export class MainpageComponent implements OnInit {
     // document.getElementById("wrapper").setAttribute('aria-disabled', 'false');
     // document.getElementById("wrapper").classList.add("overlay");
     // document.getElementById("wrapper").classList.add("overlay-transparent");
+  }
+
+  openUserDropDown(){
+    this.overlayIsActive = true;
+    document.getElementById("users").style.display = "unset";
   }
 
 }
