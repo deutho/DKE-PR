@@ -10,8 +10,9 @@
 </head>
 
 <body>	
-
-	<div id="wrapper"class="wrapper">	
+	<div *ngIf="overlayIsActive" id="superoverlay" class="superoverlay" (click)="removeAllOverlays()">	
+	</div>
+	<div id="wrapper" class="wrapper">	
 		<header>
 			<div class="container">
 				<div class="header-data">
@@ -30,8 +31,13 @@
 					<nav>
 						<ul>
 							<li>
-								<a href="#" title="">
-									Home
+								<a  routerLink="" title="">
+									Home									
+								</a>
+							</li>
+							<li>
+								<a routerLink="/friends" style="text-align: left;" title="" >
+									Freunde
 								</a>
 							</li>							
 							<li>
@@ -81,7 +87,7 @@
 								</div><!--notification-box end-->
 							</li>
 							<li>
-								<a href="#" title="" class="not-box-open">
+								<a href="#" title="" class="not-box-open" (click)="showNotifications()">
 									<span><img src="./../../images/icon7.png" alt=""></span>
 									Benachrichtigungen
 								</a>
@@ -205,7 +211,11 @@
 										</div><!--user-profile end-->
 										<ul class="user-fw-status">
 											<li>
-												<h4>Freunde</h4>
+												<h4>Du folgst</h4>
+												<span>34</span>
+											</li>
+											<li>
+												<h4>Du wirst gefolgt von</h4>
 												<span>155</span>
 											</li>
 											<li>
@@ -407,14 +417,14 @@
 	</div><!--theme-layout end-->
 
 
-
-<script type="text/javascript" src="js/jquery.min.js"></script>
-<script type="text/javascript" src="js/popper.js"></script>
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/jquery.mCustomScrollbar.js"></script>
-<script type="text/javascript" src="lib/slick/slick.min.js"></script>
-<script type="text/javascript" src="js/scrollbar.js"></script>
-<script type="text/javascript" src="js/script.js"></script>
+<!-- 
+<script type="text/javascript" src="./../../js/jquery.min.js"></script>
+<script type="text/javascript" src="./../../js/popper.js"></script>
+<script type="text/javascript" src="./../../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./../../js/jquery.mCustomScrollbar.js"></script>
+<script type="text/javascript" src="./../../lib/slick/slick.min.js"></script>
+<script type="text/javascript" src="./../../js/scrollbar.js"></script>
+<script type="text/javascript" src="./../../js/script.js"></script> -->
 
 </body>
 </html>

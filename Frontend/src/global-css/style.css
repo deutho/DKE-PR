@@ -251,6 +251,17 @@ nav ul li:hover > ul,
 	border-radius: 3px;
 }
 
+.superoverlay {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: transparent;
+	z-index: 99;
+}
+
 .wrapper {
 	float: left;
 	width: 100%;
@@ -265,6 +276,16 @@ nav ul li:hover > ul,
 	width: 100%;
 	height: 100%;
 	background-color: rgba(0,0,0,0.75);
+	z-index: 99;
+}
+.overlay-transparent:before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: transparent;
 	z-index: 99;
 }
 
@@ -399,7 +420,7 @@ nav {
 nav ul li {
 	display: inline-block;
 	text-align: center;
-	padding: 13px 13px;
+	padding: 4px 13px 22px 13px;
 	position: relative;
 }
 nav ul li:hover > ul {

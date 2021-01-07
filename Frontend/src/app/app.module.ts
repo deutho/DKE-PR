@@ -7,6 +7,9 @@ import { MainpageComponent } from './mainpage/mainpage.component';
 import { LoginpageComponent } from './loginpage/loginpage.component';
 import { RegistrationpageComponent } from './registrationpage/registrationpage.component';
 import { userService } from './services/userService';
+import { ProfilepageComponent } from './profilepage/profilepage.component';
+import { SettingspageComponent } from './settingspage/settingspage.component';
+import { FriendspageComponent } from './friendspage/friendspage.component';
 
 
 
@@ -15,7 +18,10 @@ import { userService } from './services/userService';
     AppComponent,
     MainpageComponent,
     LoginpageComponent,
-    RegistrationpageComponent
+    RegistrationpageComponent,
+    ProfilepageComponent,
+    SettingspageComponent,
+    FriendspageComponent
   ],
   imports: [
     BrowserModule,
