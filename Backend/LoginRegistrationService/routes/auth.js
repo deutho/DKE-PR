@@ -8,6 +8,8 @@ const User = require('../models/user');
 
 const authController = require('../controller/auth');
 
+const auth = require('../middleware/auth');
+
 router.post(
     '/register',
     [
@@ -31,5 +33,6 @@ router.post(
 
 router.post('/login', authController.login);
 
+router.delete('/:id', auth, authController.delete);
 
 module.exports = router;

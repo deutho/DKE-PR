@@ -19,5 +19,9 @@ module.exports = class User{
             [user.vorname, user.nachname, user.email, user.passwort, user.geburtstag]
         );
     }
+
+    static delete(id) {
+        return db.execute('DELETE FROM users WHERE id = ?', [id]);
+    }
 };
 
