@@ -566,7 +566,7 @@ nav > ul > li > a:hover {
 .user-info {
 	float: left;
 	width: 100%;
-	padding: 13px 10px;
+	padding: 9px 10px;
 	position: relative;
 }
 .user-account-settingss {
@@ -2026,7 +2026,7 @@ select {
 	position: relative;
 }
 .inp-field:before {
-	content: '\f107';
+	content: '\f078';
 	position: absolute;
 	top: 13px;
 	right: 15px;
@@ -2036,6 +2036,12 @@ select {
 .post-popup.job_post .price-br {
 	width: 100% !important;
 }
+
+.small-profile-mood {
+	width: 35px; 
+	height: 35px;
+}
+
 
 
 /* ================= sign-in ================ */

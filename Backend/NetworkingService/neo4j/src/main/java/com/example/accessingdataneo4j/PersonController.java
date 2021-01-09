@@ -15,7 +15,7 @@ public class PersonController {
     /**
      * example payload create
      *
-     *{ "create person":
+     *{ "delete person":
      *     [
      *         {"id":"50",
      *         "name":"Testuser"}
