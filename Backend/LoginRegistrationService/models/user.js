@@ -28,5 +28,27 @@ module.exports = class User{
     static getUserData(id) {
         return db.execute('SELECT id, vorname, nachname, email, status FROM users WHERE id = ?', [id]);
     }
+
+    static setVorname(vorname, id) {
+        return db.execute('UPDATE users SET vorname = ? WHERE id = ?', [vorname, id]);
+    }
+
+    static setNachname(nachname, id) {
+        return db.execute('UPDATE users SET nachname = ? WHERE id = ?', [nachname, id]);
+    }
+
+    static setEmail(email, id) {
+        return db.execute('UPDATE users SET email = ? WHERE id = ?', [email, id]);
+    }
+
+    static setPasswort(passwort, id) {
+        return db.execute('UPDATE users SET passwort = ? WHERE id = ?', [passwort, id]);
+    }
+
+    static setStatus(status, id) {
+        return db.execute('UPDATE users SET status = ? WHERE id = ?', [status, id]);
+    }
+
+
 };
 

@@ -123,3 +123,74 @@ exports.getUserData = async (req, res, next) => {
         next(err);
     }
 };
+
+exports.setVorname = async (req, res, next) => {
+    try
+    {
+        const setVornameResponse = await User.setVorname(req.body.vorname,req.params.id);
+        res.status(200).json(setVornameResponse);
+    }
+    catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+exports.setNachname = async (req, res, next) => {
+    try
+    {
+        const setNachnameResponse = await User.setNachname(req.body.nachname,req.params.id);
+        res.status(200).json(setNachnameResponse);
+    }
+    catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+exports.setEmail = async (req, res, next) => {
+    try
+    {
+        const setEmailResponse = await User.setEmail(req.body.email,req.params.id);
+        res.status(200).json(setEmailResponse);
+    }
+    catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+exports.setPasswort = async (req, res, next) => {
+    try
+    {
+        const hashedPasswort = await bcrypt.hash(req.body.passwort, 12);
+        const setPasswortResponse = await User.setPasswort(hashedPasswort,req.params.id);
+        res.status(200).json(setPasswortResponse);
+    }
+    catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+exports.setStatus = async (req, res, next) => {
+    try
+    {
+        const setStatusResponse = await User.setStatus(req.body.status,req.params.id);
+        res.status(200).json(setStatusResponse);
+    }
+    catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
