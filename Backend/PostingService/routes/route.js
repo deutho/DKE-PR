@@ -23,10 +23,6 @@ router.post(function(req, res) {
 
    router.get(function(req, res) {
        posting.find({ creator: req.body.creator }, function(err, posts) {
-           if(err){
-               res.send(err);
-               return;
-           }
         
            res.json(posts);
         });
