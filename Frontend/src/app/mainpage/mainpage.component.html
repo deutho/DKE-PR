@@ -9,13 +9,13 @@
 	<meta name="keywords" content="" />
 </head>
 
-<body>	
+<body *ngIf="loaded == true">	
 
 	<!-- <button (click)="addUserToNetwork('3','Barbara3')">Add Barbara to Neo4J</button>
-	<button (click)="addUserToNetwork('4','Alfred4')">Add Alfred to Neo4J</button>
-	<button (click)="deleteUserFromNetwork()">Delete User From Neo4J</button>
-	<button (click)="getUserFromNetwork(2)">Get User From Neo4J</button>
-	<button (click)="followUserInNetwork(2,3)">Follow User In Neo4J</button> -->
+	<button (click)="addUserToNetwork('4','Alfred4')">Add Alfred to Neo4J</button> -->
+	<!-- <button (click)="deleteUserFromNetwork()">Delete User From Neo4J</button> -->
+	<!-- <button (click)="getUserFromNetwork(13)">Get User From Neo4J</button> -->
+	<button (click)="followUserInNetwork(24,2)">Follow User In Neo4J</button>
 	<div *ngIf="overlayIsActive" id="superoverlay" class="superoverlay" (click)="removeAllOverlays()"></div>
 	<div id="wrapper" class="wrapper">	
 		<header>
@@ -191,7 +191,7 @@
 								<li><a href="javascript:;" title="">Faqs</a></li>
 								<li><a href="javascript:;" title="">Terms & Conditions</a></li>
 							</ul>
-							<h3 class="tc"><a href="sign-in.html" title="">Logout</a></h3>
+							<h3 class="tc"><a href="javascript:;" title="" (click)="logout()">Logout</a></h3>
 						</div><!--user-account-settingss end-->
 					</div>
 				</div><!--header-data end-->
@@ -214,14 +214,14 @@
 											</div><!--username-dt end-->
                                             
 											<div class="user-specs">
-												<h3>John Doe</h3>
-												<span>Grafik Designer - Selbstständig</span>
+												<h3>{{vorname}} {{nachname}}</h3>
+												<span>{{status}}</span>
 											</div>
 										</div><!--user-profile end-->
 										<ul class="user-fw-status">
 											<li>
 												<h4>Du folgst</h4>
-												<span>34</span>
+												<span>{{following}}</span>
 											</li>
 											<li>
 												<h4>Du wirst gefolgt von</h4>

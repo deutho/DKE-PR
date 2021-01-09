@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { from } from 'rxjs';
 import { networkingService} from './../services/networkingService'
-import { createPerson, rootCreatePerson} from '../models/userNetwork'
+import { createPerson, responseGetPerson, rootCreatePerson} from '../models/userNetwork'
+import { userService } from '../services/userService';
 
 @Component({
   selector: 'app-mainpage',
@@ -12,12 +13,43 @@ import { createPerson, rootCreatePerson} from '../models/userNetwork'
 })
 export class MainpageComponent implements OnInit {
 
-  constructor(private router: Router, private networkingService: networkingService) { }
+  constructor(private router: Router, private networkingService: networkingService, private userService: userService) { }
+  userID;
+  vorname;
+  nachname;
+  email;
+  status;
+  following;
+  loaded = false;
 
   overlayIsActive = false;
 
 
   ngOnInit(): void {
+    if(localStorage.getItem("token") == null) {
+      this.router.navigate(['login'])
+    }
+    console.log(localStorage.getItem("token"))
+    console.log(localStorage.getItem("userId"))
+    
+    this.getUserData()
+    this.setUserData()
+    this.loaded = true;
+  }
+
+  setUserData(){
+    this.userID = localStorage.getItem("userId")
+    this.vorname = localStorage.getItem("vorname");
+    this.nachname = localStorage.getItem("nachname");
+    this.email = localStorage.getItem("email");
+    localStorage.getItem("status") !== "null"? this.status = localStorage.getItem("status"):this.status = "";
+    this.getUserFromNetwork(this.userID)
+  }
+
+  logout(){
+    this.router.navigate(['login'])
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
   }
 
   newPost(){
@@ -61,7 +93,7 @@ export class MainpageComponent implements OnInit {
   //delete user from network
   deleteUserFromNetwork(){
     //static input
-    var userid = 1;
+    var userid = 2;
     this.networkingService.deleteUserFromNetwork(userid).then(observable => observable.subscribe(
       values => {
         console.log(values.data)        
@@ -70,11 +102,23 @@ export class MainpageComponent implements OnInit {
   }
 
   getUserFromNetwork(id: Number){
-    var response = this.networkingService.getUserFromNetwork(id).then(observable => observable.subscribe(val => console.log(val)))
+    this.networkingService.getUserFromNetwork(id).then(observable => observable.subscribe(val => this.following = val.followPersons.length))
   }
 
   followUserInNetwork(originID, targetID){   
     this.networkingService.followUserInNetwork(originID, targetID).then(observable => observable.subscribe(val => console.log(val)))
+  }
+
+  getUserData(){
+    this.userService.getUserData(localStorage.getItem("userId"))
+    .then(observable => observable.subscribe(val => {
+      // val[0]
+      
+      localStorage.setItem('vorname', val[0][0].vorname)
+      localStorage.setItem('nachname',val[0][0].nachname)
+      localStorage.setItem('email',val[0][0].email)
+      localStorage.setItem('status',val[0][0].status)
+    }))
   }
 
 }

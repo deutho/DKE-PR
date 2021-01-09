@@ -33,6 +33,8 @@ router.post(
 
 router.post('/login', authController.login);
 
-router.delete('/:id', auth, authController.delete);
+router.delete('/delete/:id', authController.delete);
+
+router.get('/user/:id', authController.getUserData);
 
 module.exports = router;

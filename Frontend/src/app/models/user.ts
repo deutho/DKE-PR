@@ -1,10 +1,17 @@
 export class user{
     public constructor(
         // public id: string, 
-        public firstname: string, 
-        public lastname: string, 
-        public passwort: string,
+        public vorname: string, 
+        public nachname: string, 
         public email: string,
-        public birthday: string
+        public passwort: string,
+        public status: string
         ) {}
+}
+
+export class loginUser {
+    public constructor(
+    public email: string,
+    public passwort: string
+    ){}
 }

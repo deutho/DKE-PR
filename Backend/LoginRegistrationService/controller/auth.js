@@ -6,25 +6,24 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 exports.register = async (req, res, next) => {
+    
     const errors = validationResult(req);
-
-    if(!errors.isEmpty()) return;
-
+    try
+    {
     const vorname = req.body.vorname;
     const nachname = req.body.nachname;
     const email = req.body.email;
     const passwort = req.body.passwort;
-    const geburtstag = req.body.geburtstag;
+    const status = req.body.status;
 
-    try
-    {
+
         const hashedPasswort = await bcrypt.hash(passwort, 12);
         const userDetails = {
             vorname: vorname,
             nachname: nachname,
             email: email,
             passwort: hashedPasswort,
-            geburtstag: geburtstag,
+            status: status,
         };
 
 
@@ -32,14 +31,19 @@ exports.register = async (req, res, next) => {
         const result = await User.save(userDetails);
 
         res.status(201).json({ message: 'Benutzer registriert!'});
+        // res.status(201).json("{}");
 
     }
     catch (err)
     {
-        if(!err.statusCode){
-            err.statusCode = 500;
-        }
-        next(err);
+        // console.log(err)
+        // if(!err.statusCode){
+            
+        //     err.statusCode = 500;
+        // }
+        // next(err);
+        console.log(err.message)
+        res.status(205).json("{}");
     }
 
 };
@@ -94,9 +98,23 @@ exports.login = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
     try
-    {
+    {        
         const deleteResponse = await User.delete(req.params.id);
         res.status(200).json(deleteResponse);
+    }
+    catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+exports.getUserData = async (req, res, next) => {
+    try
+    {        
+        const getUserDataResponse = await User.getUserData(req.params.id);
+        res.status(200).json(getUserDataResponse);
     }
     catch (err) {
         if (!err.statusCode) {

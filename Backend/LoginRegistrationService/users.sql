@@ -28,7 +28,7 @@ CREATE TABLE `users` (
   `nachname` varchar(255) NOT NULL,
   `passwort` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `geburtstag` date NOT NULL,
+  `status` varchar(255),
   PRIMARY KEY (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
