@@ -51,26 +51,30 @@ export class MainpageComponent implements OnInit {
   }
 
   //add user to network
-  addUserToNetwork(){
+  addUserToNetwork(id, name){
     //static input
-    let user = [new createPerson("1", "peter")]
+    let user = [new createPerson(id, name)]
     let rootUser= new rootCreatePerson(user);
-    this.networkingService.addUserToNetwork(rootUser).subscribe(
-      values => {
-        console.log(values.data)        
-      }
-    )
+    this.networkingService.addUserToNetwork(rootUser).then(observable => observable.subscribe(val => console.log(val)))
   }
 
   //delete user from network
   deleteUserFromNetwork(){
     //static input
     var userid = 1;
-    this.networkingService.deleteUserFromNetwork(userid).subscribe(
+    this.networkingService.deleteUserFromNetwork(userid).then(observable => observable.subscribe(
       values => {
         console.log(values.data)        
       }
-    )
+    ))
+  }
+
+  getUserFromNetwork(id: Number){
+    var response = this.networkingService.getUserFromNetwork(id).then(observable => observable.subscribe(val => console.log(val)))
+  }
+
+  followUserInNetwork(originID, targetID){   
+    this.networkingService.followUserInNetwork(originID, targetID).then(observable => observable.subscribe(val => console.log(val)))
   }
 
 }

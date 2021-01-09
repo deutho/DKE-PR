@@ -11,8 +11,11 @@
 
 <body>	
 
-	<button (click)="addUserToNetwork()">Add User to Neo4J</button>
+	<!-- <button (click)="addUserToNetwork('3','Barbara3')">Add Barbara to Neo4J</button>
+	<button (click)="addUserToNetwork('4','Alfred4')">Add Alfred to Neo4J</button>
 	<button (click)="deleteUserFromNetwork()">Delete User From Neo4J</button>
+	<button (click)="getUserFromNetwork(2)">Get User From Neo4J</button>
+	<button (click)="followUserInNetwork(2,3)">Follow User In Neo4J</button> -->
 	<div *ngIf="overlayIsActive" id="superoverlay" class="superoverlay" (click)="removeAllOverlays()"></div>
 	<div id="wrapper" class="wrapper">	
 		<header>

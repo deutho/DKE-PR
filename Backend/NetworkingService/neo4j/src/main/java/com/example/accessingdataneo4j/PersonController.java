@@ -26,7 +26,7 @@ public class PersonController {
     @PostMapping("/createPerson")
     public ResponseEntity createPerson(@RequestBody JsonNode payload) throws JSONException {
         transaction.create(payload);
-        return ResponseEntity.ok("CREATED: " + payload);
+        return ResponseEntity.ok(payload);
     }
 
     @PostMapping("/createPerson/{1}/{2}")
@@ -56,10 +56,10 @@ public class PersonController {
         return ResponseEntity.ok("Following generated.");
     }
 
-    @PostMapping("/followById")
+    @PostMapping("/followById/{1}/{2}")
     public ResponseEntity follow(@PathVariable("1") int id1, @PathVariable("2") int id2) {
         transaction.follow(id1, id2);
-        return ResponseEntity.ok("Following generated.");
+        return ResponseEntity.ok("{}");
     }
 
 
@@ -105,13 +105,13 @@ public class PersonController {
     @DeleteMapping("/deletePerson")
     public ResponseEntity deletePerson(@RequestBody JsonNode payload) throws JSONException {
         transaction.delete(payload);
-        return ResponseEntity.ok("DELETED: " + payload);
+        return ResponseEntity.ok(payload);
     }
 
     @DeleteMapping("/deletePersonById/{1}")
     public ResponseEntity deletePersonById(@PathVariable("1") final int id){
         transaction.delete(id);
-        if(!transaction.personExists(id)) return ResponseEntity.ok("ID " + id + " deleted.");
+        if(!transaction.personExists(id)) return ResponseEntity.ok("{}");
         return getBadRequestResponseEntity(id);
     }
 
