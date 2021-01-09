@@ -66,7 +66,7 @@ export class RegistrationpageComponent implements OnInit {
           console.log(localStorage.getItem("userId"))
           console.log(val.userId)    
           this.addUserToNetwork(val.userId + "", firstname + " " + lastname)
-          this.router.navigate([''])
+          
         }
           ))
         setTimeout(() => this.router.navigate(['']), 1500);
@@ -77,6 +77,7 @@ export class RegistrationpageComponent implements OnInit {
     
     
   }
+
 
   validateEmail(email) {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -92,6 +93,10 @@ export class RegistrationpageComponent implements OnInit {
   addUserToNetwork(id, name){
     let user = [new createPerson(id, name)]
     let rootUser= new rootCreatePerson(user);
-    this.networkingService.addUserToNetwork(rootUser).then(observable => observable.subscribe(val => console.log(val)))
+    this.networkingService.addUserToNetwork(rootUser).then(observable => observable.subscribe(val => {
+      console.log(val)
+      this.router.navigate([''])
+    }))
+    
   }
 }

@@ -21,7 +21,8 @@ export class MainpageComponent implements OnInit {
   status;
   following;
   loaded = false;
-
+  dataLoaded = false;
+  dataSet = false;
   overlayIsActive = false;
 
 
@@ -29,27 +30,27 @@ export class MainpageComponent implements OnInit {
     if(localStorage.getItem("token") == null) {
       this.router.navigate(['login'])
     }
-    console.log(localStorage.getItem("token"))
-    console.log(localStorage.getItem("userId"))
-    
-    this.getUserData()
-    this.setUserData()
-    this.loaded = true;
+    this.loadUserData()
   }
 
-  setUserData(){
+  async setUserData(){
     this.userID = localStorage.getItem("userId")
     this.vorname = localStorage.getItem("vorname");
     this.nachname = localStorage.getItem("nachname");
     this.email = localStorage.getItem("email");
     localStorage.getItem("status") !== "null"? this.status = localStorage.getItem("status"):this.status = "";
     this.getUserFromNetwork(this.userID)
+    
   }
 
   logout(){
     this.router.navigate(['login'])
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
+    localStorage.removeItem("vorname");
+    localStorage.removeItem("nachname");
+    localStorage.removeItem("email");
+    localStorage.removeItem("status");
   }
 
   newPost(){
@@ -102,22 +103,25 @@ export class MainpageComponent implements OnInit {
   }
 
   getUserFromNetwork(id: Number){
-    this.networkingService.getUserFromNetwork(id).then(observable => observable.subscribe(val => this.following = val.followPersons.length))
+    this.networkingService.getUserFromNetwork(id).then(observable => observable.subscribe(val => {
+      this.following = val.followPersons.length
+      this.loaded=true
+    }))
   }
 
   followUserInNetwork(originID, targetID){   
     this.networkingService.followUserInNetwork(originID, targetID).then(observable => observable.subscribe(val => console.log(val)))
   }
 
-  getUserData(){
+  loadUserData(){
     this.userService.getUserData(localStorage.getItem("userId"))
     .then(observable => observable.subscribe(val => {
-      // val[0]
-      
+      // val[0]      
       localStorage.setItem('vorname', val[0][0].vorname)
       localStorage.setItem('nachname',val[0][0].nachname)
       localStorage.setItem('email',val[0][0].email)
       localStorage.setItem('status',val[0][0].status)
+      this.setUserData()
     }))
   }
 
