@@ -1,38 +1,47 @@
 import {Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { ThrowStmt } from '@angular/compiler';
+import {rootCreatePerson} from '../models/userNetwork'
 
-//var apiurl = 'http://192.168.1.10:3000/url/shortly.at/';
-var apiurl = 'http://shortly.at:3000/url/shortly.at/';
+var apiurl = 'http://localhost:8083/neo4j/';
+// var apiurl = 'http://shortly.at:3000/';
 
 
 //ALL only as example from one of my last projects
 
 
 @Injectable()
-export class ApiService
+export class networkingService
 {
     
     constructor(private httpclient: HttpClient) {}
 
-    getAllHTTP(): Observable<any> {
-        return this.httpclient.get(apiurl);
+    // getAllHTTP(): Observable<any> {
+    //     return this.httpclient.get(apiurl);
+    // }
+
+
+    // async getByShortURLHTTP(shortURL:string): Promise<Observable<any>> {
+    //     //var param = (<HTMLInputElement>document.getElementById("sURL")).value;
+    //     return await this.httpclient.get(apiurl+shortURL);
+    // }
+
+
+    addUserToNetwork(user:rootCreatePerson): Observable<any> {
+        return this.httpclient.post(apiurl + "createPerson", user);
     }
 
+    // deleteUserFromNetwork(user:rootDeletePerson): Observable<any> {
+    //     return this.httpclient.delete(apiurl + "deletePerson", user);
+    // }
 
-    async getByShortURLHTTP(shortURL:string): Promise<Observable<any>> {
-        //var param = (<HTMLInputElement>document.getElementById("sURL")).value;
-        return await this.httpclient.get(apiurl+shortURL);
+    deleteUserFromNetwork(user: Number): Observable<any> {
+        return this.httpclient.delete(apiurl + "deletePersonById/" + user);
     }
 
-
-    postURLHTTP(toPost:URL): Observable<any> {
-        return this.httpclient.post(apiurl, toPost);
-    }
-
-    deleteURLHTTP(shortURL:string): Observable<any>{
-        return this.httpclient.delete(apiurl+shortURL);
-    }
+    // deleteURLHTTP(shortURL:string): Observable<any>{
+    //     return this.httpclient.delete(apiurl+shortURL);
+    // }
 
 }

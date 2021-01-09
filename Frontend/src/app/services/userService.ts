@@ -14,7 +14,7 @@ export class userService
     constructor(private httpclient: HttpClient) {}
 
     registerUser(user:user): Observable<any> {
-        return  this.httpclient.post(apiurl, user);
+        return  this.httpclient.post(apiurl, JSON.stringify(user));
     }
 
 

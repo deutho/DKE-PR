@@ -2037,6 +2037,12 @@ select {
 	width: 100% !important;
 }
 
+.small-profile-mood {
+	width: 35px; 
+	height: 35px;
+}
+
+
 
 /* ================= sign-in ================ */
 

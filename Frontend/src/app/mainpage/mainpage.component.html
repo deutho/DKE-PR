@@ -10,6 +10,9 @@
 </head>
 
 <body>	
+
+	<button (click)="addUserToNetwork()">Add User to Neo4J</button>
+	<button (click)="deleteUserFromNetwork()">Delete User From Neo4J</button>
 	<div *ngIf="overlayIsActive" id="superoverlay" class="superoverlay" (click)="removeAllOverlays()"></div>
 	<div id="wrapper" class="wrapper">	
 		<header>
@@ -203,7 +206,7 @@
 										<div class="user-profile">
                                             <div class="username-dt">
 												<div class="usr-pic">
-													<img src="./../../assets/images/resources/user-pic.png" alt="">
+													<img src="./../../assets/images/angry.png" alt="">
 												</div>
 											</div><!--username-dt end-->
                                             
@@ -228,14 +231,14 @@
 									</div><!--user-data end-->									
 									<div class="tags-sec full-width">
 										<ul>
-											<li><a href="javascript:;" title="">Help Center</a></li>
-											<li><a href="javascript:;" title="">About</a></li>
-											<li><a href="javascript:;" title="">Privacy Policy</a></li>
+											<li><a href="javascript:;" title="">Hilfe Center</a></li>
+											<li><a href="javascript:;" title="">Über Uns</a></li>
+											<li><a href="javascript:;" title="">Datenschutz</a></li>
 											<li><a href="javascript:;" title="">Community Guidelines</a></li>
-											<li><a href="javascript:;" title="">Cookies Policy</a></li>
+											<li><a href="javascript:;" title="">Cookies</a></li>
 											<li><a href="javascript:;" title="">Karriere</a></li>
 											<li><a href="javascript:;" title="">Sprachen</a></li>
-											<li><a href="javascript:;" title="">Copyright Policy</a></li>
+											<li><a href="javascript:;" title="">Copyright</a></li>
 										</ul>
 										<div class="cp-sec">
 											
@@ -261,7 +264,7 @@
 										<div class="post-bar">
 											<div class="post_topbar">
 												<div class="usy-dt">
-													<!-- <img src="./../../assets/images/resources/us-pic.png" alt=""> -->
+													<img class="small-profile-mood" src="./../../assets/images/happy.png" alt="">
 													<div class="usy-name">
 														<h3>John Doe</h3>
 														<span><img src="./../../assets/images/clock.png" alt="">3 min ago</span>
@@ -279,7 +282,7 @@
 												</div>
 											</div>
 											<div class="job_descp">
-												<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam luctus hendrerit metus, ut ullamcorper quam finibus at. Etiam id magna sit amet... <a href="javascript:;" title="">view more</a></p>
+												<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam luctus hendrerit metus, ut ullamcorper quam finibus at. Etiam id magna sit amet...</p>
 												<ul class="skill-tags">
 													<li><a href="javascript:;" title="">HTML</a></li>
 													<li><a href="javascript:;" title="">PHP</a></li>
@@ -303,13 +306,14 @@
 										</div><!--post-bar end-->
 										
 
-										<div class="process-comm">
+										<!-- <div class="process-comm">
 											<div class="spinner">
 												<div class="bounce1"></div>
 												<div class="bounce2"></div>
 												<div class="bounce3"></div>
 											</div>
-										</div><!--process-comm end-->
+										</div> -->
+										<!--process-comm end-->
 									</div><!--posts-section end-->
 								</div><!--main-ws-sec end-->
 							</div>
@@ -323,7 +327,7 @@
 										</div><!--sd-title end-->
 										<div class="suggestions-list">
 											<div class="suggestion-usd">
-												<img src="./../../assets/images/resources/s1.png" alt="">
+												<img class="small-profile-mood" src="./../../assets/images/happy.png" alt="">
 												<div class="sgt-text">
 													<h4>Jessica William</h4>
 													<span>Grafik Designer</span>
@@ -331,7 +335,7 @@
 												<span><i class="la la-plus"></i></span>
 											</div>
 											<div class="suggestion-usd">
-												<img src="./../../assets/images/resources/s2.png" alt="">
+												<img class="small-profile-mood" src="./../../assets/images/sad.png" alt="">
 												<div class="sgt-text">
 													<h4>John Doe</h4>
 													<span>PHP Entiwckler</span>
@@ -339,7 +343,7 @@
 												<span><i class="la la-plus"></i></span>
 											</div>
 											<div class="suggestion-usd">
-												<img src="./../../assets/images/resources/s3.png" alt="">
+												<img class="small-profile-mood" src="./../../assets/images/angry.png" alt="">
 												<div class="sgt-text">
 													<h4>Poonam</h4>
 													<span>Wordpress Entwickler</span>
@@ -347,7 +351,7 @@
 												<span><i class="la la-plus"></i></span>
 											</div>
 											<div class="suggestion-usd">
-												<img src="./../../assets/images/resources/s4.png" alt="">
+												<img class="small-profile-mood" src="./../../assets/images/hashtag.png" alt="">
 												<div class="sgt-text">
 													<h4>Bill Gates</h4>
 													<span>C &amp; C++ Entwickler</span>
@@ -355,7 +359,7 @@
 												<span><i class="la la-plus"></i></span>
 											</div>
 											<div class="suggestion-usd">
-												<img src="./../../assets/images/resources/s5.png" alt="">
+												<img class="small-profile-mood" src="./../../assets/images/angry.png" alt="">
 												<div class="sgt-text">
 													<h4>Jessica William</h4>
 													<span>Grafic Designer</span>
@@ -363,7 +367,7 @@
 												<span><i class="la la-plus"></i></span>
 											</div>
 											<div class="suggestion-usd">
-												<img src="./../../assets/images/resources/s6.png" alt="">
+												<img class="small-profile-mood" src="./../../assets/images/happy.png" alt="">
 												<div class="sgt-text">
 													<h4>John Doe</h4>
 													<span>PHP Entwickler</span>
@@ -371,7 +375,7 @@
 												<span><i class="la la-plus"></i></span>
 											</div>
 											<div class="view-more">
-												<a href="javascript:;" title="">View More</a>
+												<a href="javascript:;" title="">Mehr anzeigen</a>
 											</div>
 										</div><!--suggestions-list end-->
 									</div>
@@ -395,10 +399,10 @@
 							<div class="col-lg-12">
 								<div class="inp-field">
 									<select style="color: black">
-										<option disabled>Gefühlslage</option>
-										<option>Glücklich</option>
-										<option>Traurig</option>
-										<option>Wütend</option>
+										<option value="" disabled selected>Gefühlslage</option>
+										<option value="happy">Glücklich</option>
+										<option value="sad">Traurig</option>
+										<option value="angry">Wütend</option>
 									</select>
 								</div>
 							</div>
@@ -411,7 +415,7 @@
 							<div class="col-lg-12">
 								<ul>
 									<li><button class="active" type="submit" value="post">Post</button></li>
-									<li><a href="javascript:;" title="">Cancel</a></li>
+									<li><a href="javascript:;" title="" (click)="removeOverlay()">Cancel</a></li>
 								</ul>
 							</div>
 						</div>

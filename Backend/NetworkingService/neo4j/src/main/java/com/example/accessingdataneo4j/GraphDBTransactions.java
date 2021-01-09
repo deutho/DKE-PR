@@ -117,7 +117,7 @@ public class GraphDBTransactions implements AutoCloseable{
     public Person create(JsonNode json) throws JSONException {
         String jsonStr = json.toString();
         JSONObject obj = new JSONObject(jsonStr);
-        JSONArray arr = obj.getJSONArray("create person");
+        JSONArray arr = obj.getJSONArray("createPerson");
 
         int id = -1;
         String name = "";
@@ -172,7 +172,7 @@ public class GraphDBTransactions implements AutoCloseable{
     public void delete(JsonNode json) throws JSONException {
         String jsonStr = json.toString();
         JSONObject obj = new JSONObject(jsonStr);
-        JSONArray arr = obj.getJSONArray("delete person");
+        JSONArray arr = obj.getJSONArray("deletePerson");
 
         int id = -1;
 
