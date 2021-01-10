@@ -334,7 +334,7 @@ public class GraphDBTransactions implements AutoCloseable{
             public List<String> execute(Transaction tx)
             {
                 ArrayList<String> followsPerson = new ArrayList<>();
-                Result result = tx.run(  "MATCH (p:Person { id: 6 }) " +
+                Result result = tx.run(  "MATCH (p:Person { id: $id }) " +
                                                 "OPTIONAL MATCH (p2)-[r:FOLLOWS]->(p:Person) " +
                                                 "RETURN collect(p2.id) as follows",
                         parameters("id", id));
