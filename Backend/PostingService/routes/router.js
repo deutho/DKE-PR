@@ -44,6 +44,7 @@ module.exports = function(app, express)
             emotion: req.body.emotion,
             content: req.body.content,
             hashtags: req.body.hashtags
+
         });
 
         posting.save(function(err){
@@ -81,7 +82,7 @@ module.exports = function(app, express)
         await Post.findByIdAndDelete(req.params.id)
         res.redirect('/');
         res.json({message: "Post deleted"});
-    })
+    });
 
     return router;
 }
