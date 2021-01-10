@@ -17,11 +17,15 @@
       <input type="password" id="password" class="fadeIn five" name="login" placeholder="Passwort" autocomplete="new-password">
       <!-- TODO implement check in ts -->
       <input type="password" id="passwordConfirmation" class="fadeIn sixth" name="login" placeholder="Passwort bestätigen">
-      <input type="text" id="dateOfBirth" class="fadeIn seventh" name="login" placeholder="Geburtsdatum (TT.MM.JJJJ)">
-      <input type="submit" class="fadeIn eighth" value="Registrieren" (click)="onSubmit()">
+      <!-- <input type="text" id="dateOfBirth" class="fadeIn sixth" name="login" placeholder="Geburtsdatum (TT.MM.JJJJ)"> -->
+      <input type="submit" class="fadeIn seventh" value="Registrieren" (click)="onSubmit()">
       <!-- </form> -->
 
-      <div *ngIf = "this.successfullyRegistered == true" class="item-final alert alert-success text-center" role="alert" style="width: 80%; margin:0 auto;">
+      <div *ngIf = "userExistsAlready == true" class="alert alert-danger response fadeIn" role="alert" style="width: 80%; margin: 0px auto 20px auto;">
+        {{errorMessage}}
+      </div>
+
+      <div *ngIf = "successfullyRegistered == true" class="item-final alert alert-success text-center" role="alert" style="width: 80%; margin: 0px auto 20px auto;">
         Erfolgreich registriert!
       </div>
 

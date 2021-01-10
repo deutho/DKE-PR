@@ -43,10 +43,9 @@ export class networkingService
         return await this.httpclient.delete(apiurl + "deletePersonById/" + user);
     }
 
-
-
-
-
+    async getAllUsersFromNetwork(): Promise<Observable<any>> {
+        return await this.httpclient.get(apiurl+"allPersons");
+    }
 
 
 }

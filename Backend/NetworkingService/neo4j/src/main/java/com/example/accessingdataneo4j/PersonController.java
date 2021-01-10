@@ -15,7 +15,7 @@ public class PersonController {
     /**
      * example payload create
      *
-     *{ "delete person":
+     *{ "createPerson":
      *     [
      *         {"id":"50",
      *         "name":"Testuser"}
@@ -25,8 +25,11 @@ public class PersonController {
      */
     @PostMapping("/createPerson")
     public ResponseEntity createPerson(@RequestBody JsonNode payload) throws JSONException {
-        transaction.create(payload);
-        return ResponseEntity.ok(payload);
+        if(!transaction.personExists(transaction.getIdOfPayload(payload))){
+            transaction.create(payload);
+            return ResponseEntity.ok("{ \"message\": \" user "+ transaction.getIdOfPayload(payload) +" created\"}");
+        }
+        return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
     }
 
     @PostMapping("/createPerson/{1}/{2}")
@@ -40,7 +43,7 @@ public class PersonController {
     /**
      * example payload follow
      *
-     * { "following":
+     * { ".follow":
      *     [
      *         {"id_from":"5",
      *         "name_from":"Franz",
@@ -52,14 +55,17 @@ public class PersonController {
      */
     @PostMapping("/follow")
     public ResponseEntity follow(@RequestBody JsonNode payload) throws JSONException {
-        transaction.follow(payload);
-        return ResponseEntity.ok("Following generated.");
+        if(transaction.personExists(transaction.getIdOfPayload(payload))){
+            transaction.follow(payload);
+            return ResponseEntity.ok("{ Following generated " + payload +"}");
+        }
+        return getBadRequestResponseEntity("{\"message\":\"One of these IDs does not exist.\"}");
     }
 
     @PostMapping("/followById/{1}/{2}")
     public ResponseEntity follow(@PathVariable("1") int id1, @PathVariable("2") int id2) {
         transaction.follow(id1, id2);
-        return ResponseEntity.ok("{}");
+        return ResponseEntity.ok("{ \"message\": \""+id1 + " follows " + id2 + "\"}");
     }
 
 
@@ -67,7 +73,7 @@ public class PersonController {
     /**
      * example payload unfollow
      *
-     * { "unfollowing":
+     * { ".unfollow":
      *     [
      *         {"id_from":"5",
      *         "name_from":"Franz",
@@ -79,14 +85,40 @@ public class PersonController {
      */
     @DeleteMapping("/unfollow")
     public ResponseEntity unfollow(@RequestBody JsonNode payload) throws JSONException {
-        transaction.unfollow(payload);
-        return ResponseEntity.ok("Unfollowing done.");
+        if(transaction.personExists(transaction.getIdOfPayload(payload))){
+            transaction.unfollow(payload);
+            return ResponseEntity.ok("{\"message\":\"Unfollowing done.\"}");
+        }
+        return getBadRequestResponseEntity("{\"message\":\"One of these IDs does not exist.\"}");
     }
 
     @DeleteMapping("/unfollowById/{1}/{2}")
     public ResponseEntity unfollow(@PathVariable("1") int id1, @PathVariable("2") int id2){
         transaction.unfollow(id1, id2);
         return ResponseEntity.ok(transaction.getPersonById(id1));
+    }
+
+
+
+    /**
+     * example payload update
+     *
+     * { "update person":
+     *     [
+     *         {"id_pre":"5",
+     *         "name_pre":"Franz",
+     *         "name_post":"Franzi"}
+     *     ]
+     * }
+     *
+     */
+    @PatchMapping("/updatePerson")
+    public ResponseEntity update(@RequestBody JsonNode payload) throws JSONException {
+        if(transaction.personExists(transaction.getIdOfPayload(payload))){
+            transaction.update(payload);
+            return ResponseEntity.ok("UPDATED: " + payload);
+        }
+        return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
     }
 
 
@@ -104,23 +136,71 @@ public class PersonController {
      */
     @DeleteMapping("/deletePerson")
     public ResponseEntity deletePerson(@RequestBody JsonNode payload) throws JSONException {
-        transaction.delete(payload);
-        return ResponseEntity.ok(payload);
+        if(transaction.personExists(transaction.getIdOfPayload(payload))){
+            transaction.delete(payload);
+            return ResponseEntity.ok("DELETED: " + payload);
+        }
+        return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
     }
 
     @DeleteMapping("/deletePersonById/{1}")
     public ResponseEntity deletePersonById(@PathVariable("1") final int id){
         transaction.delete(id);
-        if(!transaction.personExists(id)) return ResponseEntity.ok("{}");
-        return getBadRequestResponseEntity(id);
+        if(!transaction.personExists(id)) return ResponseEntity.ok("{\"message\": \"ID " + id + "\" deleted.\"}");
+        return getBadRequestResponseEntity("");
     }
 
+    /**
+     * example payload subscriptions
+     *
+     *{ "subscriptions":
+     *     [
+     *         {"id":"50",
+     *         "name":"Testuser"}
+     *     ]
+     * }
+     *
+     */
+    @GetMapping("/subscriptions")
+    public ResponseEntity getMySubs(@RequestBody JsonNode payload) throws JSONException {
+        if(transaction.personExists(transaction.getIdOfPayload(payload))){
+            if(transaction.getSubscriptions(transaction.getIdOfPayload(payload)).isEmpty()){
+                return getBadRequestResponseEntity("{[]}");
+            }
+            return ResponseEntity.ok("My subscriptions: " +
+                    transaction.getSubscriptions(transaction.getIdOfPayload(payload)).toString());
+        }
+        return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
+    }
+
+    /**
+     * example payload follower
+     *
+     *{ "follower":
+     *     [
+     *         {"id":"50",
+     *         "name":"Testuser"}
+     *     ]
+     * }
+     *
+     */
+    @GetMapping("/follower")
+    public ResponseEntity getMyFollower(@RequestBody JsonNode payload) throws JSONException {
+        if(transaction.personExists(transaction.getIdOfPayload(payload))){
+            if(transaction.getFollowers(transaction.getIdOfPayload(payload)).isEmpty()){
+                return getBadRequestResponseEntity("{[]}");
+            }
+            return ResponseEntity.ok("{ My followers: " +
+                    transaction.getFollowers(transaction.getIdOfPayload(payload)).toString() + "}");
+        }
+        return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
+    }
 
 
     @DeleteMapping("/emptyDB")
     public ResponseEntity deleteAllEntries(){
         transaction.emptyDB();
-        if(transaction.getLastId() == -1) return ResponseEntity.ok("All entries were deleted.");
+        if(transaction.getLastId() == -1) return ResponseEntity.ok("{\"message\":\"All entries were deleted.\"}");
         return ResponseEntity.badRequest().build();
     }
 
@@ -132,17 +212,17 @@ public class PersonController {
     }
 
 
-
     @GetMapping("/{id}")
-    public Person getPersonById(@PathVariable int id){
-        return transaction.getPersonById(id);
+    public ResponseEntity getPersonById(@PathVariable int id){
+        if(transaction.personExists(id)) {
+            return ResponseEntity.ok(transaction.getPersonById(id));
+        }
+        return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
     }
 
-
-
-    private ResponseEntity getBadRequestResponseEntity(final int id) {
+    private ResponseEntity getBadRequestResponseEntity(final String errorMessage) {
         return new ResponseEntity(
-                HttpStatus.BAD_REQUEST + " - " + id,
+                HttpStatus.BAD_REQUEST + " - " + errorMessage,
                 HttpStatus.BAD_REQUEST);
     }
 }

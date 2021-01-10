@@ -9,13 +9,22 @@
 	<meta name="keywords" content="" />
 </head>
 
-<body>	
+<div *ngIf="loaded == false" class="process-comm">
+	<div class="spinner">
+		<div class="bounce1"></div>
+		<div class="bounce2"></div>
+		<div class="bounce3"></div>
+	</div>
+</div>
+
+<body *ngIf="loaded == true">	
 
 	<!-- <button (click)="addUserToNetwork('3','Barbara3')">Add Barbara to Neo4J</button>
-	<button (click)="addUserToNetwork('4','Alfred4')">Add Alfred to Neo4J</button>
-	<button (click)="deleteUserFromNetwork()">Delete User From Neo4J</button>
-	<button (click)="getUserFromNetwork(2)">Get User From Neo4J</button>
-	<button (click)="followUserInNetwork(2,3)">Follow User In Neo4J</button> -->
+	<button (click)="addUserToNetwork('4','Alfred4')">Add Alfred to Neo4J</button> -->
+	<!-- <button (click)="deleteUserFromNetwork()">Delete User From Neo4J</button> -->
+	<!-- <button (click)="getUserFromNetwork(13)">Get User From Neo4J</button> -->
+	<button (click)="getAllUsersFromNetwork()">Get All User From Neo4J</button>
+	<!-- <button (click)="followUserInNetwork(24,2)">Follow User In Neo4J</button> -->
 	<div *ngIf="overlayIsActive" id="superoverlay" class="superoverlay" (click)="removeAllOverlays()"></div>
 	<div id="wrapper" class="wrapper">	
 		<header>
@@ -191,7 +200,7 @@
 								<li><a href="javascript:;" title="">Faqs</a></li>
 								<li><a href="javascript:;" title="">Terms & Conditions</a></li>
 							</ul>
-							<h3 class="tc"><a href="sign-in.html" title="">Logout</a></h3>
+							<h3 class="tc"><a href="javascript:;" title="" (click)="logout()">Logout</a></h3>
 						</div><!--user-account-settingss end-->
 					</div>
 				</div><!--header-data end-->
@@ -214,14 +223,14 @@
 											</div><!--username-dt end-->
                                             
 											<div class="user-specs">
-												<h3>John Doe</h3>
-												<span>Grafik Designer - Selbstständig</span>
+												<h3>{{vorname}} {{nachname}}</h3>
+												<span>{{status}}</span>
 											</div>
 										</div><!--user-profile end-->
 										<ul class="user-fw-status">
 											<li>
 												<h4>Du folgst</h4>
-												<span>34</span>
+												<span>{{following}}</span>
 											</li>
 											<li>
 												<h4>Du wirst gefolgt von</h4>
@@ -302,9 +311,9 @@
                                                         <!-- <span>25</span> -->
                                                         <span style="background-color: transparent;"></span>
 													</li> 
-													<li><a href="javascript:;" class="com"><i class="fas fa-comment-alt"></i> Kommentare 15</a></li>
+													<!-- <li><a href="javascript:;" class="com"><i class="fas fa-comment-alt"></i> Kommentare 15</a></li> -->
 												</ul>
-												<a href="javascript:;"><i class="fas fa-eye"></i>Gesehen 50</a>
+												<!-- <a href="javascript:;"><i class="fas fa-eye"></i>Gesehen 50</a> -->
 											</div>
 										</div><!--post-bar end-->
 										
@@ -332,53 +341,53 @@
 											<div class="suggestion-usd">
 												<img class="small-profile-mood" src="./../../assets/images/happy.png" alt="">
 												<div class="sgt-text">
-													<h4>Jessica William</h4>
-													<span>Grafik Designer</span>
+													<h4>{{recommendedUser1.name}}</h4>
+													<span>{{recommendedUser1Status}}</span>
 												</div>
-												<span><i class="la la-plus"></i></span>
+												<span><i class="la la-plus" (click)="follow(recommendedUser1.id_person)"></i></span>
 											</div>
 											<div class="suggestion-usd">
 												<img class="small-profile-mood" src="./../../assets/images/sad.png" alt="">
 												<div class="sgt-text">
-													<h4>John Doe</h4>
-													<span>PHP Entiwckler</span>
+													<h4>{{recommendedUser2.name}}</h4>
+													<span>{{recommendedUser2Status}}</span>
 												</div>
-												<span><i class="la la-plus"></i></span>
+												<span><i class="la la-plus" (click)="follow(recommendedUser2.id_person)"></i></span>
 											</div>
 											<div class="suggestion-usd">
 												<img class="small-profile-mood" src="./../../assets/images/angry.png" alt="">
 												<div class="sgt-text">
-													<h4>Poonam</h4>
-													<span>Wordpress Entwickler</span>
+													<h4>{{recommendedUser3.name}}</h4>
+													<span>{{recommendedUser3Status}}</span>
 												</div>
-												<span><i class="la la-plus"></i></span>
+												<span><i class="la la-plus" (click)="follow(recommendedUser3.id_person)"></i></span>
 											</div>
 											<div class="suggestion-usd">
 												<img class="small-profile-mood" src="./../../assets/images/hashtag.png" alt="">
 												<div class="sgt-text">
-													<h4>Bill Gates</h4>
-													<span>C &amp; C++ Entwickler</span>
+													<h4>{{recommendedUser4.name}}</h4>
+													<span>{{recommendedUser4Status}}</span>
 												</div>
-												<span><i class="la la-plus"></i></span>
+												<span><i class="la la-plus" (click)="follow(recommendedUser4.id_person)"></i></span>
 											</div>
 											<div class="suggestion-usd">
 												<img class="small-profile-mood" src="./../../assets/images/angry.png" alt="">
 												<div class="sgt-text">
-													<h4>Jessica William</h4>
-													<span>Grafic Designer</span>
+													<h4>{{recommendedUser5.name}}</h4>
+													<span>{{recommendedUser5Status}}</span>
 												</div>
-												<span><i class="la la-plus"></i></span>
+												<span><i class="la la-plus" (click)="follow(recommendedUser5.id_person)"></i></span>
 											</div>
-											<div class="suggestion-usd">
+											<div class="suggestion-usd" *ngIf="recommendedUser6.name !== ''">
 												<img class="small-profile-mood" src="./../../assets/images/happy.png" alt="">
 												<div class="sgt-text">
-													<h4>John Doe</h4>
-													<span>PHP Entwickler</span>
+													<h4>{{recommendedUser6.name}}</h4>
+													<span>{{recommendedUser6Status}}</span>
 												</div>
-												<span><i class="la la-plus"></i></span>
+												<span><i class="la la-plus" (click)="follow(recommendedUser6.id_person)"></i></span>
 											</div>
 											<div class="view-more">
-												<a href="javascript:;" title="">Mehr anzeigen</a>
+												<a href="javascript:;" title="" (click)="getAllUsersFromNetwork()">Mehr anzeigen</a>
 											</div>
 										</div><!--suggestions-list end-->
 									</div>

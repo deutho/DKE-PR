@@ -28,7 +28,7 @@ CREATE TABLE `users` (
   `nachname` varchar(255) NOT NULL,
   `passwort` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `geburtstag` date NOT NULL,
+  `status` varchar(255),
   PRIMARY KEY (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -40,7 +40,12 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'test','test','testtest','test@gmail.com','1990-10-01'),(3,'as','as','as','as','2001-01-10'),(5,'heute','heute','as','heute','2001-01-10'),(6,'Samed','Esen','$2a$12$kPgu/dZwdq01rAuHvWnedexMExI3t7FGDzZ34pKMd.vkFEnyiPhR.','esen.samed@gmail.com','2000-10-01'),(7,'Thomas','Esen','$2a$12$mJUYFo2XVMbcxDP7eYfYUOkRS/i2u1RRFtxjjCWsTQFTtGAe2Ktce','asdfasdfd@gmail.com','2000-10-01'),(8,'Thomas','Esen','$2a$12$QKz76r7solx7gjDFSJxzFOo87y57kXvaJQ6mq0fg4r3KAZBQg8k2W','123hsh@gmail.com','2000-10-01'),(9,'TEST','Esen','$2a$12$AMFoI3m3Z2ZBS3FnFe0HPeZq0MbrgIUMasNHUwDKI6qEGCPFuhQnW','asdfasdfasdfasdf@gmail.com','2000-10-01'),(10,'TEST','Esen','$2a$12$.SsfGePpQiKM2Kt0Mxb41eAaKTQ2.rzvp0sQlpMxd4Sdsm2vPnuWK','7171717@gmail.com','2000-10-01'),(11,'TEST','Esen','$2a$12$kPt1hrneVaomOHInohB8KuhbEd8xsgAXF2eqQSEmq5iAXed0hnhCW','46464646@gmail.com','2001-10-21'),(12,'TEST','Esen','$2a$12$J3EdBHwiYnRQDEgjX6N3XeVxyqjr/3TqAqPmFXM11VLOZzk3p6DNS','46432364646@gmail.com','2001-10-21');
+INSERT INTO `users` VALUES 
+(1,'Thomas','Deutsch','$12$dCBm5Mg4HXOPP3/NDWwFHeohyRBlJ4GebeystA8mh27L7sUygbawi','tsdasdest@gmail.com','Frontend werken'),
+(3,'Samed','Esen','as','as','Login Service schraueben'),
+(6,'Paul','Pühringer','$2a$12$kPgu/dZwdq01rAuHvWnedexMExI3t7FGDzZ34pKMd.vkFEnyiPhR.','esesadfasdn.samed@gmail.com','Netzwerke sind meine Welt!'),
+(7,'Sabine','Lindner','$2a$12$mJUYFo2XVMbcxDP7eYfYUOkRS/i2u1RRFtxjjCWsTQFTtGAe2Ktce','asdfasdfd@gmail.com','Posten ist mir eine Freude!')
+
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
