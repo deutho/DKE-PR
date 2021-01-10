@@ -6,6 +6,7 @@ var PostingSchema = new Schema({
     creator: String,
     emotion: String,
     content: String, 
+    name: String,
     hashtags: [],
     created: {type: Date, default: Date.now}
 

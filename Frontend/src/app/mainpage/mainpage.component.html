@@ -19,13 +19,13 @@
 
 <body *ngIf="loaded == true">	
 
-	<!-- <button (click)="addUserToNetwork('3','Barbara3')">Add Barbara to Neo4J</button>
-	<button (click)="addUserToNetwork('4','Alfred4')">Add Alfred to Neo4J</button> -->
+	<!--  <button (click)="addUserToNetwork('3','Barbara3')">Add Barbara to Neo4J</button> -->
+	<button (click)="addUserToNetwork('1','Alfred1')">Add Alfred to Neo4J</button>
 	<!-- <button (click)="deleteUserFromNetwork()">Delete User From Neo4J</button> -->
 	<!-- <button (click)="getUserFromNetwork(13)">Get User From Neo4J</button> -->
 	<!-- <button (click)="getAllUsersFromNetwork()">Get All User From Neo4J</button> -->
-	<!-- <button (click)="followUserInNetwork(24,2)">Follow User In Neo4J</button> -->
-	<button (click)="getPostingsOfUser(1)">Get all Postings of current user</button>
+	<!-- <button (click)="followUserInNetwork(23,1)">Follow User In Neo4J</button> -->
+	<!-- <button (click)="getPostingsOfUser(1)">Get all Postings of current user</button> -->
 	<div *ngIf="overlayIsActive" id="superoverlay" class="superoverlay" (click)="removeAllOverlays()"></div>
 	<div id="wrapper" class="wrapper">	
 		<header>
@@ -231,11 +231,11 @@
 										<ul class="user-fw-status">
 											<li>
 												<h4>Du folgst</h4>
-												<span>{{following}}</span>
+												<span>{{followingCount}}</span>
 											</li>
 											<li>
 												<h4>Du wirst gefolgt von</h4>
-												<span>155</span>
+												<span>{{followersCount}}</span>
 											</li>
 											<li>
 												<a routerLink="/profilepage" title="">Profilseite ansehen</a>
@@ -274,12 +274,12 @@
 										</div><!--post-st end-->
 									</div><!--post-topbar end-->
 									<div class="posts-section">
-										<div class="post-bar">
+										<div class="post-bar" *ngFor="let post of allPostings">
 											<div class="post_topbar">
 												<div class="usy-dt">
-													<img class="small-profile-mood" src="./../../assets/images/happy.png" alt="">
+													<img class="small-profile-mood" src='{{"./../../assets/images/" + post.emotion + ".png"}}' alt="">
 													<div class="usy-name">
-														<h3>John Doe</h3>
+														<h3>{{post.name}}</h3>
 														<span><img src="./../../assets/images/clock.png" alt="">3 min ago</span>
 													</div>
 												</div>
@@ -295,13 +295,9 @@
 												</div>
 											</div>
 											<div class="job_descp">
-												<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam luctus hendrerit metus, ut ullamcorper quam finibus at. Etiam id magna sit amet...</p>
-												<ul class="skill-tags">
-													<li><a href="javascript:;" title="">HTML</a></li>
-													<li><a href="javascript:;" title="">PHP</a></li>
-													<li><a href="javascript:;" title="">CSS</a></li>
-													<li><a href="javascript:;" title="">Javascript</a></li>
-													<li><a href="javascript:;" title="">Wordpress</a></li> 	
+												<p>{{post.content}}</p>
+												<ul class="skill-tags" >
+													<li *ngFor="let hashtag of post.hashtags"><a href="javascript:;" title="">{{hashtag}}</a></li>
 												</ul>
 											</div>
 											<!-- <div class="job-status-bar">
@@ -411,7 +407,7 @@
 						<div class="row">			
 							<div class="col-lg-12">
 								<div class="inp-field">
-									<select style="color: black">
+									<select style="color: black" id="moodSelector">
 										<option value="" disabled selected>Gefühlslage</option>
 										<option value="happy">Glücklich</option>
 										<option value="sad">Traurig</option>
@@ -420,14 +416,14 @@
 								</div>
 							</div>
 							<div class="col-lg-12">
-								<textarea name="description" placeholder="Mir geht es..." style="color: black"></textarea>
+								<textarea id="content" name="description" placeholder="Mir geht es..." style="color: black"></textarea>
                             </div>
                             <div class="col-lg-12">
-								<input type="text" name="skills" placeholder="#happy #sad" style="color: black">
+								<input id="hashtags" (input)="checkForHashtags()" type="text" name="skills" placeholder="#happy #sad" style="color: black" >
 							</div>
 							<div class="col-lg-12">
 								<ul>
-									<li><button class="active" type="submit" value="post">Post</button></li>
+									<li><button class="active" type="button" value="post" (click)="submitPost()">Post</button></li>
 									<li><a href="javascript:;" title="" (click)="removeOverlay()">Cancel</a></li>
 								</ul>
 							</div>

@@ -6,6 +6,7 @@ import { createPerson, responseGetPerson, rootCreatePerson} from '../models/user
 import { userService } from '../services/userService';
 import { user } from '../models/user';
 import { postingService } from '../services/postingService';
+import { posting } from '../models/posting';
 
 @Component({
   selector: 'app-mainpage',
@@ -23,6 +24,9 @@ export class MainpageComponent implements OnInit {
   email;
   status;
   following;
+  followers;
+  followingCount;
+  followersCount;
   loaded = false;
   dataLoaded = false;
   dataSet = false;
@@ -39,6 +43,7 @@ export class MainpageComponent implements OnInit {
   recommendedUser4Status: string;
   recommendedUser5Status: string;
   recommendedUser6Status: string;
+  allPostings: posting[] = [];
 
 
   ngOnInit(): void {
@@ -73,10 +78,54 @@ export class MainpageComponent implements OnInit {
     document.getElementById("wrapper").classList.add("overlay");
   }
 
+  submitPost(){
+    // public creator: String,
+    // public emotion: String,
+    // public content: String, 
+    // public hashtags: String[]
+    let emotion = (<HTMLSelectElement>document.getElementById("moodSelector")).value
+    let content = (<HTMLTextAreaElement>document.getElementById("content")).value
+    let hashtagsRaw = (<HTMLInputElement>document.getElementById("hashtags")).value
+    if(emotion != "" && content != "" && hashtagsRaw != ""){
+      var hashtags =  hashtagsRaw.split(" "); 
+      for(let i = 0; i<hashtags.length; i++){
+        this.networkingService.getUserFromNetwork(hashtags[i])
+        .then(observable => observable.subscribe(val => {
+          console.log(val)
+        }))
+        .catch(err => console.log(err))
+      }
+
+
+      var name = localStorage.getItem("vorname")  + " " + localStorage.getItem("nachname");
+      
+      var payload = new posting(localStorage.getItem("userId"), emotion, content, hashtags, name)
+      console.log(payload)
+      this.postingService.postPosting(payload).then(observable => observable.subscribe(val => {      
+        this.removeOverlay()
+        this.allPostings = []
+        this.getAllPostings()
+      }))
+    }
+  }
+
   removeOverlay(){
     document.getElementById("popup").classList.remove("active");
     document.getElementById("wrapper").classList.remove("overlay");
 
+  }
+
+  checkForHashtags(){
+    let hashtagsRaw = (<HTMLInputElement>document.getElementById("hashtags")).value
+    var splitted = hashtagsRaw.split(" "); 
+    var correctedHastags= [];
+    splitted.forEach(word => {
+      if(word[0] !== "#"){
+        word = "#" + word    
+      }
+      correctedHastags.push(word)
+    });
+    (<HTMLInputElement>document.getElementById("hashtags")).value = correctedHastags.join(" ");
   }
 
   removeAllOverlays() {
@@ -119,10 +168,20 @@ export class MainpageComponent implements OnInit {
 
   getUserFromNetworkInitial(id: Number){
     this.networkingService.getUserFromNetwork(id).then(observable => observable.subscribe(val => {
-      this.following = val.followPersons.length
-      this.getAllUsersFromNetwork()
+      this.following = val.followPersons
+      this.followingCount = val.followPersons.length
+      this.getFollowersOfUser(localStorage.getItem("userId"))
      
     }))
+  }
+
+  getFollowersOfUser(id) {
+    this.networkingService.getFollowersOfUserFromNetwork(id).then(observable => observable.subscribe(val => {
+      this.followers = val.followers
+      this.followersCount = val.followers.length;
+      this.getAllUsersFromNetwork()
+    }))
+
   }
 
   async getUserFromNetwork(id: Number): Promise<Observable<user>>{
@@ -141,7 +200,7 @@ export class MainpageComponent implements OnInit {
 
       this.loadStatusForRecommendations(recommendetUsers)
 
-      this.loaded=true}))
+      }))
   }
   
   loadStatusForRecommendations(recommendetUsers){
@@ -152,7 +211,29 @@ export class MainpageComponent implements OnInit {
     if(recommendetUsers.length>3) this.userService.getUserData(recommendetUsers[3].id_person).then(observable => observable.subscribe(val => this.recommendedUser4Status = val[0].status!==undefined?val[0].status:"Hey there!"))
     if(recommendetUsers.length>4) this.userService.getUserData(recommendetUsers[4].id_person).then(observable => observable.subscribe(val => this.recommendedUser5Status = val[0].status!==undefined?val[0].status:"Hey there!"))
     if(recommendetUsers.length>5) this.userService.getUserData(recommendetUsers[5].id_person).then(observable => observable.subscribe(val => this.recommendedUser6Status = val[0].status!==undefined?val[0].status:"Hey there!"))
-    console.log(status)
+    this.getAllPostings()
+  }
+
+  getAllPostings(){
+    
+    this.postingService.getPostingsOfUser(localStorage.getItem("userId")).then(observable => observable.subscribe(val => {
+      for(var i = 0; i<val.postings.length; i++){
+        this.allPostings.push(val.postings[i])
+      }
+      // console.log(this.following)
+      for(var i = 0; i<this.following.length; i++){
+        this.postingService.getPostingsOfUser(this.following[i]).then(observable => observable.subscribe(val => {
+          for(var i = 0; i<val.postings.length; i++){
+            this.allPostings.push(val.postings[i])
+          }
+        }))
+      }
+    }))
+    // this.following.array.forEach(element => {
+    //   console.log(element)
+    // });
+    console.log(this.allPostings)
+    this.loaded = true
   }
 
   followUserInNetwork(originID, targetID){   

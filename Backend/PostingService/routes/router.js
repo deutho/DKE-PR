@@ -43,7 +43,8 @@ module.exports = function(app, express)
             creator: req.body.creator,
             emotion: req.body.emotion,
             content: req.body.content,
-            hashtags: req.body.hashtags
+            hashtags: req.body.hashtags,
+            name: req.body.name
         });
 
         posting.save(function(err){
@@ -65,7 +66,7 @@ module.exports = function(app, express)
                 return;
             }
 
-            res.json(postings);
+            res.json({postings: postings});
        });
     });
 

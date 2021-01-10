@@ -27,7 +27,7 @@ export class networkingService
     //     //var param = (<HTMLInputElement>document.getElementById("sURL")).value;
     //     return await this.httpclient.get(apiurl+shortURL);
     // }
-    async getUserFromNetwork(id: Number): Promise<Observable<any>> {
+    async getUserFromNetwork(id): Promise<Observable<any>> {
         return await this.httpclient.get(apiurl+id);
     }
 
@@ -45,6 +45,10 @@ export class networkingService
 
     async getAllUsersFromNetwork(): Promise<Observable<any>> {
         return await this.httpclient.get(apiurl+"allPersons");
+    }
+
+    async getFollowersOfUserFromNetwork(id: Number): Promise<Observable<any>> {
+        return await this.httpclient.get(apiurl+"follower/"+id);
     }
 
 
