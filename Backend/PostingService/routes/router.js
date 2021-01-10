@@ -71,12 +71,12 @@ module.exports = function(app, express)
     });
 
 
-    /*router.put('/:id', async(req, res) =>{
+    router.put('/:id', async(req, res) =>{
         Post.findByIdAndUpdate(req.params.id , {useFindandModify: flase})
 
         res.send(post);
 
-    });*/
+    });
     
     router.delete('/id', async (req, res) =>{
         await Post.findByIdAndDelete(req.params.id)
