@@ -71,29 +71,18 @@ module.exports = function(app, express)
     });
 
 
-    /*api.get('edit/:id', async(req, res)=>{
+    router.put('/:id', async(req, res) =>{
+        Post.findByIdAndUpdate(req.params.id , {useFindandModify: flase})
 
-        var post = await Post.findById(req.params.id)
-        var posting = new Post ({
-            emotion: req.body.emotion,
-            content: req.body.content,
-        })
-
-
-        posting.save(function(err){
-            if(err){
-                res.send(err);
-                return;
-            }
-
-            res.json({message: "New Post Created"});
-        });   
+        res.send(post);
 
     });
-    api.delete('/id', async (req, res) =>{
+    
+    router.delete('/id', async (req, res) =>{
         await Post.findByIdAndDelete(req.params.id)
         res.redirect('/');
-    })*/
+        res.json({message: "Post deleted"});
+    });
 
     return router;
 }

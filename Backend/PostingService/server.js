@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const config = require('./config')
 const mongoose = require('mongoose');
-const { eventNames } = require('../LoginRegistrationService/util/database');
+//const { eventNames } = require('../LoginRegistrationService/util/database');
 
 //Connection to database
 mongoose.connect(config.database, {
