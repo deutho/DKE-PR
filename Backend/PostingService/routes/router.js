@@ -38,11 +38,12 @@ module.exports = function(app, express)
 
 
     router.post("/create", function(req, res){
-
+        console.log(req.body.creator)
         var posting = new Post({
-            creator: req.body.id,
+            creator: req.body.creator,
             emotion: req.body.emotion,
             content: req.body.content,
+            hashtags: req.body.hashtags
         });
 
         posting.save(function(err){
@@ -56,10 +57,10 @@ module.exports = function(app, express)
 
     })
 
-    router.route('/')
-    .get(function(req, res){
-        Post.find({creator: req.body.id}, function(err, postings){
-            if(err) {
+    router.get("/:id", function(req, res){
+        console.log(req.params.id)
+        Post.find({creator: req.params.id}, function(err, postings){            
+            if(err) {                
                 res.send(err);
                 return;
             }
