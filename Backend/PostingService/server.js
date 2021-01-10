@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const config = require('./config')
 const routeRoutes =  require('./routes/route');
 const mongoose = require('mongoose');
+const { eventNames } = require('../LoginRegistrationService/util/database');
 
 
 mongoose.connect(config.database, function(err) {
@@ -28,7 +29,7 @@ app.listen(config.port, function(err) {
         console.log(err);
     }
     else{
-        console.log("Listening on port 3000");
+        console.log("Listening on port 5000");
     }
 
 });

@@ -45,7 +45,7 @@ export class RegistrationpageComponent implements OnInit {
       this.showErrorMessage("Passwörter stimmen nicht überein!")
       return
     }
-    
+    console.log("Input is valid")
 
 
 
@@ -55,7 +55,9 @@ export class RegistrationpageComponent implements OnInit {
         this.showErrorMessage("Dieser E-Mail Adresse existiert bereits!")
       }
       else {
-        // console.log(val.userId)        
+        console.log(val)
+        console.log("Benutzer in User-Datenbank angelegt")   
+        this.addUserToNetwork(val.id + "", firstname + " " + lastname)     
         this.successfullyRegistered = true
         setTimeout(() => this.successfullyRegistered = false, 1500);
         // get Token - use login request
@@ -65,7 +67,7 @@ export class RegistrationpageComponent implements OnInit {
           console.log(localStorage.getItem("token"))
           console.log(localStorage.getItem("userId"))
           console.log(val.userId)    
-          this.addUserToNetwork(val.userId + "", firstname + " " + lastname)
+          
           
         }
           ))
@@ -94,7 +96,8 @@ export class RegistrationpageComponent implements OnInit {
     let user = [new createPerson(id, name)]
     let rootUser= new rootCreatePerson(user);
     this.networkingService.addUserToNetwork(rootUser).then(observable => observable.subscribe(val => {
-      console.log(val)
+      console.log("Benutzer in Netzwek-Datenbank angelegt.")
+
       this.router.navigate([''])
     }))
     

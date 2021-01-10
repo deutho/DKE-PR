@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.route('/')
 router.post(function(req, res) {
+    console.log("Hello world")
     var posting = new Post({
         creator: req.body.creator,
         content: req.body.content,

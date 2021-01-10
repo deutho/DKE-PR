@@ -29,9 +29,7 @@ exports.register = async (req, res, next) => {
 
 
         const result = await User.save(userDetails);
-
-        res.status(201).json({ message: 'Benutzer registriert!'});
-        // res.status(201).json("{}");
+        res.status(201).json({ id: result[0].insertId});
 
     }
     catch (err)

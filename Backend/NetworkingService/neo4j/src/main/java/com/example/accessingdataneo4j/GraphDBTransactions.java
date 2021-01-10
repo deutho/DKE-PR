@@ -28,7 +28,7 @@ public class GraphDBTransactions implements AutoCloseable{
     public Person create(JsonNode json) throws JSONException {
         String jsonStr = json.toString();
         JSONObject obj = new JSONObject(jsonStr);
-        JSONArray arr = obj.getJSONArray("create person");
+        JSONArray arr = obj.getJSONArray("createPerson");
 
         int id = -1;
         String name = "";
@@ -411,7 +411,7 @@ public class GraphDBTransactions implements AutoCloseable{
     public void delete(JsonNode json) throws JSONException {
         String jsonStr = json.toString();
         JSONObject obj = new JSONObject(jsonStr);
-        JSONArray arr = obj.getJSONArray("delete person");
+        JSONArray arr = obj.getJSONArray("deletePerson");
 
         int id = -1;
 
@@ -476,22 +476,22 @@ public class GraphDBTransactions implements AutoCloseable{
         JSONObject obj = new JSONObject(jsonStr);
         int id = -1;
 
-        if(jsonStr.contains("create person")){
-            JSONArray arr = obj.getJSONArray("create person");
+        if(jsonStr.contains("createPerson")){
+            JSONArray arr = obj.getJSONArray("createPerson");
             for (int j = 0; j < arr.length(); j++) {
                 id = arr.getJSONObject(j).getInt("id");
             }
         }
 
-        if(jsonStr.contains("update person")){
-            JSONArray arr = obj.getJSONArray("update person");
+        if(jsonStr.contains("updatePerson")){
+            JSONArray arr = obj.getJSONArray("updatePerson");
             for (int j = 0; j < arr.length(); j++) {
                 id = arr.getJSONObject(j).getInt("id");
             }
         }
 
-        if(jsonStr.contains("delete person")){
-            JSONArray arr = obj.getJSONArray("delete person");
+        if(jsonStr.contains("deletePerson")){
+            JSONArray arr = obj.getJSONArray("deletePerson");
             for (int j = 0; j < arr.length(); j++) {
                 id = arr.getJSONObject(j).getInt("id");
             }
