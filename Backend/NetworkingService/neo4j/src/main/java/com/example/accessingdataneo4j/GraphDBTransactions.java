@@ -29,7 +29,7 @@ public class GraphDBTransactions implements AutoCloseable{
         String jsonStr = json.toString();
         JSONObject obj = new JSONObject(jsonStr);
         JSONArray arr = obj.getJSONArray("createPerson");
-
+        
         int id = -1;
         String name = "";
         for (int i = 0; i < arr.length(); i++) {
@@ -271,6 +271,31 @@ public class GraphDBTransactions implements AutoCloseable{
                }else{
                    exist = true;
                }
+                return exist;
+            }
+        });
+        return exist;
+    }
+
+    //GET true/false if person exists in database
+    public boolean hashtagExists(String name){
+        Session session = driver.session();
+        boolean exist;
+        exist = session.readTransaction(new TransactionWork<Boolean>(){
+            @Override
+            public Boolean execute(Transaction tx)
+            {
+                Result result = tx.run(  "MATCH (p:Person { name: $name })" +
+                                "OPTIONAL MATCH (p)-[r:FOLLOWS]->(p2:Person)" +
+                                "RETURN p.id, p.name, collect(p2.id) as follows",
+                        parameters( "name", name));
+
+                boolean exist;
+                if(!result.hasNext()){
+                    exist = false;
+                }else{
+                    exist = true;
+                }
                 return exist;
             }
         });
@@ -535,5 +560,25 @@ public class GraphDBTransactions implements AutoCloseable{
             }
         }
         return id;
+    }
+
+    public String getNameOfHashtag(JsonNode json) throws JSONException {
+        String jsonStr = json.toString();
+        JSONObject obj = new JSONObject(jsonStr);
+        String hashtagName = "";
+
+        if(jsonStr.contains("createPerson")){
+            JSONArray arr = obj.getJSONArray("createPerson");
+            for (int j = 0; j < arr.length(); j++) {
+                hashtagName = arr.getJSONObject(j).getString("name");
+            }
+        }
+        return hashtagName;
+    }
+
+    public boolean isHashtag(JsonNode json){
+        String jsonStr = json.toString();
+        if(jsonStr.contains("#")) return  true;
+        return false;
     }
 }

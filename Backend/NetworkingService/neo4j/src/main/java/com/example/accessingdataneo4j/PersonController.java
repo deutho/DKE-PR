@@ -13,7 +13,7 @@ public class PersonController {
     GraphDBTransactions transaction = new GraphDBTransactions();
 
     /**
-     * example payload create
+     * example payload create person
      *
      *{ "createPerson":
      *     [
@@ -23,13 +23,34 @@ public class PersonController {
      * }
      *
      */
+
+    /**
+     * example payload create HASHTAG
+     *
+     *{ "createPerson":
+     *     [
+     *         {"id":"50",
+     *         "name":"#testhashtag"}
+     *     ]
+     * }
+     *
+     */
     @PostMapping("/createPerson")
     public ResponseEntity createPerson(@RequestBody JsonNode payload) throws JSONException {
+        if(transaction.isHashtag(payload)){
+            if(transaction.hashtagExists(transaction.getNameOfHashtag(payload)) || transaction.personExists(transaction.getIdOfPayload(payload))){
+                return getBadRequestResponseEntity("{\"message\":\"ID or Hashtag already exist.\"}");
+            }else{
+                transaction.create(payload);
+                return ResponseEntity.ok("{ \"message\": \" Hashtag "+ transaction.getNameOfHashtag(payload) +" created\"}");
+            }
+        }
+
         if(!transaction.personExists(transaction.getIdOfPayload(payload))){
             transaction.create(payload);
             return ResponseEntity.ok("{ \"message\": \" user "+ transaction.getIdOfPayload(payload) +" created\"}");
         }
-        return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
+        return getBadRequestResponseEntity("{\"message\":\"ID already exists.\"}");
     }
 
     @PostMapping("/createPerson/{1}/{2}")
