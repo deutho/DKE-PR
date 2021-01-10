@@ -5,16 +5,18 @@ import { networkingService} from './../services/networkingService'
 import { createPerson, responseGetPerson, rootCreatePerson} from '../models/userNetwork'
 import { userService } from '../services/userService';
 import { user } from '../models/user';
+import { postingService } from '../services/postingService';
 
 @Component({
   selector: 'app-mainpage',
   templateUrl: './mainpage.component.html',
   styleUrls: ['./mainpage.component.css'],
-  providers: [networkingService]
+  providers: [networkingService,
+              postingService]
 })
 export class MainpageComponent implements OnInit {
 
-  constructor(private router: Router, private networkingService: networkingService, private userService: userService) { }
+  constructor(private router: Router, private postingService: postingService, private networkingService: networkingService, private userService: userService) { }
   userID;
   vorname;
   nachname;
@@ -193,6 +195,10 @@ export class MainpageComponent implements OnInit {
 
     return arr;
 
+  }
+
+  getPostingsOfUser(id){
+    this.postingService.getPostingsOfUser(id).then(observable => observable.subscribe(val => console.log(val)))
   }
 
 }
