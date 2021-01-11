@@ -257,6 +257,7 @@ export class MainpageComponent implements OnInit {
       for(var i = 0; i<val.postings.length; i++){
         this.allPostings.push(val.postings[i])
       }
+      this.allPostings.sort((n1, n2) => {return n2.created.getTime() - n1.created.getTime() });
       // console.log(this.following)
       for(var i = 0; i<this.following.length; i++){
         this.postingService.getPostingsOfUser(this.following[i]).then(observable => observable.subscribe(val => {
@@ -324,6 +325,20 @@ export class MainpageComponent implements OnInit {
 
   getPostingsOfUser(id){
     this.postingService.getPostingsOfUser(id).then(observable => observable.subscribe(val => console.log(val)))
+  }
+
+  dateFormatter(date: string){
+    console.log(date)
+    var year = parseInt(date.substring(0,4))
+    var month = parseInt(date.substring(5,7))
+    var day = parseInt(date.substring(8,10))
+    var hour = parseInt(date.substring(11,13))
+    var min = parseInt(date.substring(14,16))
+    var sec = parseInt(date.substring(17,19))
+    var correctDate: string;
+    correctDate = day+"."+month+"."+year + "   " +hour+":"+min+":"+sec
+    return correctDate
+
   }
 
 }
