@@ -259,8 +259,8 @@ public class PersonController {
             if(transaction.getSubscriptions(transaction.getIdOfPayload(payload)).isEmpty()){
                 return ResponseEntity.ok("{[]}");
             }
-            return ResponseEntity.ok("{\"message\":\"My subscriptions: " +
-                            transaction.getSubscriptions(transaction.getIdOfPayload(payload)).toString() + "\"}");
+            return ResponseEntity.ok("{\"subscriptions: \"" +
+                            transaction.getSubscriptions(transaction.getIdOfPayload(payload)).toString() + "}");
         }
         return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
     }
@@ -269,10 +269,10 @@ public class PersonController {
     public ResponseEntity getMySubsById(@PathVariable("1") final int id){
         if(transaction.personExists(id)){
             if(transaction.getSubscriptions(id).isEmpty()){
-                return getBadRequestResponseEntity("{[]}");
+                return ResponseEntity.ok("{[]}");
             }
-            return ResponseEntity.ok("{\"message\":\"My subscriptions: " +
-                    transaction.getSubscriptions(id).toString() + "\"}");
+            return ResponseEntity.ok("{\"subscriptions: \"" +
+                    transaction.getSubscriptions(id).toString() + "}");
         }
         return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
     }
@@ -293,9 +293,9 @@ public class PersonController {
     public ResponseEntity getMyFollower(@RequestBody JsonNode payload) throws JSONException {
         if(transaction.personExists(transaction.getIdOfPayload(payload))){
             if(transaction.getFollowers(transaction.getIdOfPayload(payload)).isEmpty()){
-                return getBadRequestResponseEntity("{[]}");
+                return ResponseEntity.ok("{[]}");
             }
-            return ResponseEntity.ok("{\"message\":\"My followers: " +
+            return ResponseEntity.ok("{\"followers\": " +
                     transaction.getFollowers(transaction.getIdOfPayload(payload)).toString() + "\"}");
         }
         return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
@@ -305,10 +305,10 @@ public class PersonController {
     public ResponseEntity getMyFollower(@PathVariable("1") final int id){
         if(transaction.personExists(id)){
             if(transaction.getFollowers(id).isEmpty()){
-                return getBadRequestResponseEntity("{[]}");
+                return ResponseEntity.ok("{\"followers\": []}");
             }
-            return ResponseEntity.ok("{\"message\":\"My followers: " +
-                    transaction.getFollowers(id).toString() + "\"}");
+            return ResponseEntity.ok("{\"followers\": " +
+                    transaction.getFollowers(id).toString() + "}");
         }
         return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
     }

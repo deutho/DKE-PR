@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { from, Observable } from 'rxjs';
+import { from, observable, Observable } from 'rxjs';
 import { networkingService} from './../services/networkingService'
 import { createPerson, responseGetPerson, rootCreatePerson} from '../models/userNetwork'
 import { userService } from '../services/userService';
@@ -31,12 +31,12 @@ export class MainpageComponent implements OnInit {
   dataLoaded = false;
   dataSet = false;
   overlayIsActive = false;
-  recommendedUser1: responseGetPerson;
-  recommendedUser2: responseGetPerson;
-  recommendedUser3: responseGetPerson;
-  recommendedUser4: responseGetPerson;
-  recommendedUser5: responseGetPerson;
-  recommendedUser6: responseGetPerson;
+  recommendedUser1: responseGetPerson = new responseGetPerson(0,"",[]);
+  recommendedUser2: responseGetPerson = new responseGetPerson(0,"",[]);
+  recommendedUser3: responseGetPerson = new responseGetPerson(0,"",[]);
+  recommendedUser4: responseGetPerson = new responseGetPerson(0,"",[]);
+  recommendedUser5: responseGetPerson = new responseGetPerson(0,"",[]);
+  recommendedUser6: responseGetPerson = new responseGetPerson(0,"",[]);
   recommendedUser1Status: string;
   recommendedUser2Status: string;
   recommendedUser3Status: string;
@@ -44,7 +44,12 @@ export class MainpageComponent implements OnInit {
   recommendedUser5Status: string;
   recommendedUser6Status: string;
   allPostings: posting[] = [];
-
+  showRec1 = true;
+  showRec2 = true;
+  showRec3 = true;
+  showRec4 = true;
+  showRec5 = true;
+  showRec6 = true;
 
   ngOnInit(): void {
     if(localStorage.getItem("token") == null) {
@@ -89,17 +94,28 @@ export class MainpageComponent implements OnInit {
     if(emotion != "" && content != "" && hashtagsRaw != ""){
       var hashtags =  hashtagsRaw.split(" "); 
       for(let i = 0; i<hashtags.length; i++){
-        this.networkingService.getUserFromNetwork(hashtags[i])
-        .then(observable => observable.subscribe(val => {
-          console.log(val)
-        }))
-        .catch(err => console.log(err))
+        let hashtagid = this.getRandomInt(10000000000).toString()
+        this.networkingService.getUserFromNetwork(hashtagid)
+        .then(observable => observable.subscribe(val => console.log(val)))
+        .catch(error => {
+          console.error()
+          console.log("im catch teil")
+          let user = [new createPerson(hashtagid, hashtags[i])]
+          let rootUser= new rootCreatePerson(user);
+          this.networkingService.addUserToNetwork(rootUser)
+          .then(observable => observable.subscribe(val => console.log(val)))
+          .catch(error => console.error())
+        
+        })
+
+
+
       }
 
 
       var name = localStorage.getItem("vorname")  + " " + localStorage.getItem("nachname");
       
-      var payload = new posting(localStorage.getItem("userId"), emotion, content, hashtags, name)
+      var payload = new posting(localStorage.getItem("userId"), emotion, content, hashtags, name, new Date())
       console.log(payload)
       this.postingService.postPosting(payload).then(observable => observable.subscribe(val => {      
         this.removeOverlay()
@@ -107,6 +123,10 @@ export class MainpageComponent implements OnInit {
         this.getAllPostings()
       }))
     }
+  }
+
+  getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
   }
 
   removeOverlay(){
@@ -177,8 +197,10 @@ export class MainpageComponent implements OnInit {
 
   getFollowersOfUser(id) {
     this.networkingService.getFollowersOfUserFromNetwork(id).then(observable => observable.subscribe(val => {
+      console.log(val)
       this.followers = val.followers
-      this.followersCount = val.followers.length;
+      if(val.followers !== undefined)this.followersCount = val.followers.length;
+      else this.followersCount = '"Server response error"'
       this.getAllUsersFromNetwork()
     }))
 
@@ -191,12 +213,27 @@ export class MainpageComponent implements OnInit {
   getAllUsersFromNetwork(){
     this.networkingService.getAllUsersFromNetwork().then(observable => observable.subscribe(val => {
       var recommendetUsers:responseGetPerson[] = this.shuffleArray(val)
+
+      let forDeletion = [parseInt(localStorage.getItem("userId"))]
+      forDeletion.join(this.following)
+      for(let i= 0; i<this.following.length; i++){
+        forDeletion.push(this.following[i])
+      }
+      recommendetUsers = recommendetUsers.filter(item => !forDeletion.includes(item.id_person))
+
       if(recommendetUsers.length>0) this.recommendedUser1 = recommendetUsers[0]
       if(recommendetUsers.length>1) this.recommendedUser2 = recommendetUsers[1]
       if(recommendetUsers.length>2) this.recommendedUser3 = recommendetUsers[2]
       if(recommendetUsers.length>3) this.recommendedUser4 = recommendetUsers[3]
       if(recommendetUsers.length>4) this.recommendedUser5 = recommendetUsers[4]
       if(recommendetUsers.length>5) this.recommendedUser6 = recommendetUsers[5]
+
+      this.showRec1 = true;
+      this.showRec2 = true;
+      this.showRec3 = true;
+      this.showRec4 = true;
+      this.showRec5 = true;
+      this.showRec6 = true;
 
       this.loadStatusForRecommendations(recommendetUsers)
 
@@ -228,6 +265,8 @@ export class MainpageComponent implements OnInit {
           }
         }))
       }
+      // console.log(this.allPostings)
+      this.allPostings.sort((n1, n2) => {return n2.created.getTime() - n1.created.getTime() });
     }))
     // this.following.array.forEach(element => {
     //   console.log(element)
@@ -240,9 +279,14 @@ export class MainpageComponent implements OnInit {
     this.networkingService.followUserInNetwork(originID, targetID).then(observable => observable.subscribe(val => console.log(val)))
   }
 
-  follow(userid){
+  follow(userid, htmlElementid){
     this.followUserInNetwork(localStorage.getItem("userId"),userid)
-    
+    if(htmlElementid == 1) this.showRec1 = false;
+    if(htmlElementid == 2) this.showRec2 = false;
+    if(htmlElementid == 3) this.showRec3 = false;
+    if(htmlElementid == 4) this.showRec4 = false;
+    if(htmlElementid == 5) this.showRec5 = false;
+    if(htmlElementid == 6) this.showRec6 = false;
   }
 
   print(content){

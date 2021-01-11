@@ -41,7 +41,7 @@ export class following{
 
 export class responseGetPerson{
     public constructor(
-        public id_person: string, 
+        public id_person: number, 
         public name: string, 
         public followPersons: string[]
         ) {}

@@ -20,7 +20,7 @@
 <body *ngIf="loaded == true">	
 
 	<!--  <button (click)="addUserToNetwork('3','Barbara3')">Add Barbara to Neo4J</button> -->
-	<button (click)="addUserToNetwork('1','Alfred1')">Add Alfred to Neo4J</button>
+	<!-- <button (click)="addUserToNetwork('1','Alfred1')">Add Alfred to Neo4J</button> -->
 	<!-- <button (click)="deleteUserFromNetwork()">Delete User From Neo4J</button> -->
 	<!-- <button (click)="getUserFromNetwork(13)">Get User From Neo4J</button> -->
 	<!-- <button (click)="getAllUsersFromNetwork()">Get All User From Neo4J</button> -->
@@ -280,7 +280,7 @@
 													<img class="small-profile-mood" src='{{"./../../assets/images/" + post.emotion + ".png"}}' alt="">
 													<div class="usy-name">
 														<h3>{{post.name}}</h3>
-														<span><img src="./../../assets/images/clock.png" alt="">3 min ago</span>
+														<span><img src="./../../assets/images/clock.png" alt="">{{post.created}}</span>
 													</div>
 												</div>
 												<div class="ed-opts">
@@ -335,53 +335,53 @@
 											<i class="la la-ellipsis-v"></i>
 										</div><!--sd-title end-->
 										<div class="suggestions-list">
-											<div class="suggestion-usd">
+											<div class="suggestion-usd"  *ngIf="recommendedUser1.name !== '' && showRec1 == true">
 												<img class="small-profile-mood" src="./../../assets/images/happy.png" alt="">
 												<div class="sgt-text">
 													<h4>{{recommendedUser1.name}}</h4>
 													<span>{{recommendedUser1Status}}</span>
 												</div>
-												<span><i class="la la-plus" (click)="follow(recommendedUser1.id_person)"></i></span>
+												<span><i class="la la-plus" (click)="follow(recommendedUser1.id_person, 1)"></i></span>
 											</div>
-											<div class="suggestion-usd">
+											<div class="suggestion-usd"  *ngIf="recommendedUser2.name !== ''  && showRec2 == true">
 												<img class="small-profile-mood" src="./../../assets/images/sad.png" alt="">
 												<div class="sgt-text">
 													<h4>{{recommendedUser2.name}}</h4>
 													<span>{{recommendedUser2Status}}</span>
 												</div>
-												<span><i class="la la-plus" (click)="follow(recommendedUser2.id_person)"></i></span>
+												<span><i class="la la-plus" (click)="follow(recommendedUser2.id_person, 2)"></i></span>
 											</div>
-											<div class="suggestion-usd">
+											<div class="suggestion-usd"  *ngIf="recommendedUser3.name !== ''  && showRec3 == true">
 												<img class="small-profile-mood" src="./../../assets/images/angry.png" alt="">
 												<div class="sgt-text">
 													<h4>{{recommendedUser3.name}}</h4>
 													<span>{{recommendedUser3Status}}</span>
 												</div>
-												<span><i class="la la-plus" (click)="follow(recommendedUser3.id_person)"></i></span>
+												<span><i class="la la-plus" (click)="follow(recommendedUser3.id_person, 3)"></i></span>
 											</div>
-											<div class="suggestion-usd">
+											<div class="suggestion-usd"  *ngIf="recommendedUser4.name !== ''  && showRec4 == true">
 												<img class="small-profile-mood" src="./../../assets/images/hashtag.png" alt="">
 												<div class="sgt-text">
 													<h4>{{recommendedUser4.name}}</h4>
 													<span>{{recommendedUser4Status}}</span>
 												</div>
-												<span><i class="la la-plus" (click)="follow(recommendedUser4.id_person)"></i></span>
+												<span><i class="la la-plus" (click)="follow(recommendedUser4.id_person, 4)"></i></span>
 											</div>
-											<div class="suggestion-usd">
+											<div class="suggestion-usd" *ngIf="recommendedUser5.name !== ''  && showRec5 == true">
 												<img class="small-profile-mood" src="./../../assets/images/angry.png" alt="">
 												<div class="sgt-text">
 													<h4>{{recommendedUser5.name}}</h4>
 													<span>{{recommendedUser5Status}}</span>
 												</div>
-												<span><i class="la la-plus" (click)="follow(recommendedUser5.id_person)"></i></span>
+												<span><i class="la la-plus" (click)="follow(recommendedUser5.id_person, 5)"></i></span>
 											</div>
-											<div class="suggestion-usd" *ngIf="recommendedUser6.name !== ''">
+											<div class="suggestion-usd" *ngIf="recommendedUser6.name !== ''  && showRec6 == true">
 												<img class="small-profile-mood" src="./../../assets/images/happy.png" alt="">
 												<div class="sgt-text">
 													<h4>{{recommendedUser6.name}}</h4>
 													<span>{{recommendedUser6Status}}</span>
 												</div>
-												<span><i class="la la-plus" (click)="follow(recommendedUser6.id_person)"></i></span>
+												<span><i class="la la-plus" (click)="follow(recommendedUser6.id_person, 6)"></i></span>
 											</div>
 											<div class="view-more">
 												<a href="javascript:;" title="" (click)="getAllUsersFromNetwork()">Mehr anzeigen</a>
