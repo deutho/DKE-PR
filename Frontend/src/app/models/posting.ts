@@ -5,6 +5,6 @@ export class posting{
         public content: String, 
         public hashtags: String[],
         public name: String,
-        public created: Date
+        public created: string
     ){}
 }

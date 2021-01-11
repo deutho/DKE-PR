@@ -50,6 +50,13 @@ export class MainpageComponent implements OnInit {
   showRec4 = true;
   showRec5 = true;
   showRec6 = true;
+  userMood: String = "happy";
+  recommendedUser1Emotion: string= "happy";
+  recommendedUser2Emotion: string= "happy";
+  recommendedUser3Emotion: string= "happy";
+  recommendedUser4Emotion: string= "happy";
+  recommendedUser5Emotion: string= "happy";
+  recommendedUser6Emotion: string= "happy";
 
   ngOnInit(): void {
     if(localStorage.getItem("token") == null) {
@@ -115,7 +122,7 @@ export class MainpageComponent implements OnInit {
 
       var name = localStorage.getItem("vorname")  + " " + localStorage.getItem("nachname");
       
-      var payload = new posting(localStorage.getItem("userId"), emotion, content, hashtags, name, new Date())
+      var payload = new posting(localStorage.getItem("userId"), emotion, content, hashtags, name, new Date().toString())
       console.log(payload)
       this.postingService.postPosting(payload).then(observable => observable.subscribe(val => {      
         this.removeOverlay()
@@ -191,7 +198,7 @@ export class MainpageComponent implements OnInit {
       this.following = val.followPersons
       this.followingCount = val.followPersons.length
       this.getFollowersOfUser(localStorage.getItem("userId"))
-     
+      
     }))
   }
 
@@ -248,6 +255,13 @@ export class MainpageComponent implements OnInit {
     if(recommendetUsers.length>3) this.userService.getUserData(recommendetUsers[3].id_person).then(observable => observable.subscribe(val => this.recommendedUser4Status = val[0].status!==undefined?val[0].status:"Hey there!"))
     if(recommendetUsers.length>4) this.userService.getUserData(recommendetUsers[4].id_person).then(observable => observable.subscribe(val => this.recommendedUser5Status = val[0].status!==undefined?val[0].status:"Hey there!"))
     if(recommendetUsers.length>5) this.userService.getUserData(recommendetUsers[5].id_person).then(observable => observable.subscribe(val => this.recommendedUser6Status = val[0].status!==undefined?val[0].status:"Hey there!"))
+    
+    if(recommendetUsers.length>0) this.postingService.getPostingsOfUser(recommendetUsers[0].id_person).then(observable => observable.subscribe(val => val.postings[0] != undefined ? this.recommendedUser1Emotion = val.postings[0].emotion: this.recommendedUser1Emotion = "happy"))
+    if(recommendetUsers.length>1) this.postingService.getPostingsOfUser(recommendetUsers[1].id_person).then(observable => observable.subscribe(val => val.postings[0] != undefined ? this.recommendedUser2Emotion = val.postings[0].emotion: this.recommendedUser2Emotion = "happy"))
+    if(recommendetUsers.length>2) this.postingService.getPostingsOfUser(recommendetUsers[2].id_person).then(observable => observable.subscribe(val => val.postings[0] != undefined ? this.recommendedUser3Emotion = val.postings[0].emotion: this.recommendedUser3Emotion = "happy"))
+    if(recommendetUsers.length>3) this.postingService.getPostingsOfUser(recommendetUsers[3].id_person).then(observable => observable.subscribe(val => val.postings[0] != undefined ? this.recommendedUser4Emotion = val.postings[0].emotion: this.recommendedUser4Emotion = "happy"))
+    if(recommendetUsers.length>4) this.postingService.getPostingsOfUser(recommendetUsers[4].id_person).then(observable => observable.subscribe(val => val.postings[0] != undefined ? this.recommendedUser5Emotion = val.postings[0].emotion: this.recommendedUser5Emotion = "happy"))
+    if(recommendetUsers.length>5) this.postingService.getPostingsOfUser(recommendetUsers[5].id_person).then(observable => observable.subscribe(val => val.postings[0] != undefined ? this.recommendedUser6Emotion = val.postings[0].emotion: this.recommendedUser6Emotion = "happy"))
     this.getAllPostings()
   }
 
@@ -257,8 +271,8 @@ export class MainpageComponent implements OnInit {
       for(var i = 0; i<val.postings.length; i++){
         this.allPostings.push(val.postings[i])
       }
-      this.allPostings.sort((n1, n2) => {return n2.created.getTime() - n1.created.getTime() });
-      // console.log(this.following)
+      this.allPostings.sort((n1, n2) => {return new Date(n2.created).getTime() - new Date(n1.created).getTime() });
+      this.userMood = this.allPostings[0] != undefined? this.allPostings[0].emotion: "happy"
       for(var i = 0; i<this.following.length; i++){
         this.postingService.getPostingsOfUser(this.following[i]).then(observable => observable.subscribe(val => {
           for(var i = 0; i<val.postings.length; i++){
@@ -266,18 +280,16 @@ export class MainpageComponent implements OnInit {
           }
         }))
       }
-      // console.log(this.allPostings)
-      this.allPostings.sort((n1, n2) => {return n2.created.getTime() - n1.created.getTime() });
+      this.allPostings.sort((n1, n2) => {return new Date(n2.created).getTime() - new Date(n1.created).getTime() });
     }))
-    // this.following.array.forEach(element => {
-    //   console.log(element)
-    // });
-    console.log(this.allPostings)
+
     this.loaded = true
   }
 
   followUserInNetwork(originID, targetID){   
-    this.networkingService.followUserInNetwork(originID, targetID).then(observable => observable.subscribe(val => console.log(val)))
+    this.networkingService.followUserInNetwork(originID, targetID).then(observable => observable.subscribe(val => {
+      this.allPostings = [];
+      this.getAllPostings()}))
   }
 
   follow(userid, htmlElementid){
@@ -328,7 +340,6 @@ export class MainpageComponent implements OnInit {
   }
 
   dateFormatter(date: string){
-    console.log(date)
     var year = parseInt(date.substring(0,4))
     var month = parseInt(date.substring(5,7))
     var day = parseInt(date.substring(8,10))
