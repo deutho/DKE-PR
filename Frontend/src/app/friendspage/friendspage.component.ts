@@ -1,17 +1,29 @@
 import { Component, OnInit } from '@angular/core';
+import { networkingService } from '../services/networkingService';
+import { postingService } from '../services/postingService';
+import { userService } from '../services/userService';
 
 @Component({
   selector: 'app-friendspage',
   templateUrl: './friendspage.component.html',
-  styleUrls: ['./friendspage.component.css']
+  styleUrls: ['./friendspage.component.css'],
+  providers: [
+    networkingService,
+    postingService,
+    userService
+            ]
 })
 export class FriendspageComponent implements OnInit {
 
-  constructor() { }
+  constructor( private networkingService: networkingService, private postingService: postingService, private userService: userService) { }
   overlayIsActive = false;
-  ngOnInit(): void {
-  }
+  following;
+  loaded = false;
 
+
+  ngOnInit(): void {
+    this.getFollowing();
+  }
   removeAllOverlays() {
     document.getElementById("notification").style.display = "none";
     document.getElementById("users").style.display = "none";
@@ -29,6 +41,11 @@ export class FriendspageComponent implements OnInit {
   openUserDropDown(){
     this.overlayIsActive = true;
     document.getElementById("users").style.display = "unset";
+  }
+
+  getFollowing(){
+    this.networkingService.getSubscriptionsOfUserFromNetwork(localStorage.getItem("userId"))
+    this.loaded = true;
   }
 
 }
