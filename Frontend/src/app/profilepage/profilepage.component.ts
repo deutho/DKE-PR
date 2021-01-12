@@ -52,6 +52,7 @@ export class ProfilepageComponent implements OnInit {
   showRec4 = true;
   showRec5 = true;
   showRec6 = true;
+  userNameDropdown;
   recommendedUser1Emotion: string= "happy";
   recommendedUser2Emotion: string= "happy";
   recommendedUser3Emotion: string= "happy";
@@ -62,6 +63,7 @@ export class ProfilepageComponent implements OnInit {
     if(localStorage.getItem("token") == null) {
       this.router.navigate(['login'])
     }
+    this.userNameDropdown = localStorage.getItem("dropdownNavBar")
     this.loadProfileData()    
 
   }

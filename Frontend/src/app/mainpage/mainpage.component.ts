@@ -16,6 +16,7 @@ import { posting } from '../models/posting';
               postingService]
 })
 export class MainpageComponent implements OnInit {
+  userNameDropdown: string;
 
   constructor(private router: Router, private postingService: postingService, private networkingService: networkingService, private userService: userService) { }
   userID;
@@ -70,6 +71,7 @@ export class MainpageComponent implements OnInit {
     this.vorname = localStorage.getItem("vorname");
     this.nachname = localStorage.getItem("nachname");
     this.email = localStorage.getItem("email");
+    this.userNameDropdown = localStorage.getItem("dropdownNavBar")
     localStorage.getItem("status") !== "null"? this.status = localStorage.getItem("status"):this.status = "";
     this.getUserFromNetworkInitial(this.userID)
     
@@ -316,6 +318,7 @@ export class MainpageComponent implements OnInit {
     .then(observable => observable.subscribe(val => {
       // val[0]      
       localStorage.setItem('vorname', val[0][0].vorname)
+      localStorage.setItem('dropdownNavBar', val[0][0].vorname)
       localStorage.setItem('nachname',val[0][0].nachname)
       localStorage.setItem('email',val[0][0].email)
       localStorage.setItem('status',val[0][0].status)

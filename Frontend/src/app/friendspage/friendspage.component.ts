@@ -24,7 +24,9 @@ export class FriendspageComponent implements OnInit {
   loaded = false;
   userIdInProcess;
   subs: subscriptions[];
+  userNameDropdown
   ngOnInit(): void {
+    this.userNameDropdown = localStorage.getItem("dropdownNavBar")
     this.getFollowing();
   }
   removeAllOverlays() {
