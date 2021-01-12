@@ -73,7 +73,7 @@ public class PersonController {
 //            return getBadRequestResponseEntity("{\"message\":\"No # detected.\"}");
 //        }else{
             if(transaction.hashtagExists(transaction.getHashtagId(payload))){
-                return getBadRequestResponseEntity("{\"message\":\"Hashtag already exist.\"}");
+                return ResponseEntity.ok("{\"message\":\"Hashtag already exist.\"}");
             }else{
                 transaction.createHashtag(payload);
                 return ResponseEntity.ok("{ \"message\": \" Hashtag "+ transaction.getHashtagId(payload) +" created\"}");
@@ -84,7 +84,7 @@ public class PersonController {
     @PostMapping("/createHashtag/{1}")
     public ResponseEntity createHashtag(@PathVariable("1") final String id) {
         if(transaction.hashtagExists(id)) {
-            return getBadRequestResponseEntity("{\"message\":\"Hashtag already exist.\"}");
+            return ResponseEntity.ok("{\"message\":\"Hashtag already exist.\"}");
         }
             transaction.createHashtag(id);
             return ResponseEntity.ok("{ \"message\": \" Hashtag " + id + " created\"}");

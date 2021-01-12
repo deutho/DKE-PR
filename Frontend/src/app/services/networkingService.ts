@@ -51,5 +51,7 @@ export class networkingService
         return await this.httpclient.get(apiurl+"follower/"+id);
     }
 
-
+    async addHashtagToNetwork(hashtag): Promise<Observable<any>> {
+        return await this.httpclient.post(apiurl + "createHashtag/" + hashtag, null);
+    }
 }

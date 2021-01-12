@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { from, observable, Observable } from 'rxjs';
+import { from, observable, Observable, of } from 'rxjs';
 import { networkingService} from './../services/networkingService'
 import { createPerson, responseGetPerson, rootCreatePerson} from '../models/userNetwork'
 import { userService } from '../services/userService';
@@ -57,7 +57,7 @@ export class MainpageComponent implements OnInit {
   recommendedUser4Emotion: string= "happy";
   recommendedUser5Emotion: string= "happy";
   recommendedUser6Emotion: string= "happy";
-
+  notAllPostingFiledFilledOut = false;
   ngOnInit(): void {
     if(localStorage.getItem("token") == null) {
       this.router.navigate(['login'])
@@ -98,24 +98,25 @@ export class MainpageComponent implements OnInit {
     let emotion = (<HTMLSelectElement>document.getElementById("moodSelector")).value
     let content = (<HTMLTextAreaElement>document.getElementById("content")).value
     let hashtagsRaw = (<HTMLInputElement>document.getElementById("hashtags")).value
-    if(emotion != "" && content != "" && hashtagsRaw != ""){
+    if(emotion != "" && content != "" ){
       var hashtags =  hashtagsRaw.split(" "); 
       for(let i = 0; i<hashtags.length; i++){
-        let hashtagid = this.getRandomInt(10000000000).toString()
-        this.networkingService.getUserFromNetwork(hashtagid)
-        .then(observable => observable.subscribe(val => console.log(val)))
-        .catch(error => {
-          console.error()
-          console.log("im catch teil")
-          let user = [new createPerson(hashtagid, hashtags[i])]
-          let rootUser= new rootCreatePerson(user);
-          this.networkingService.addUserToNetwork(rootUser)
-          .then(observable => observable.subscribe(val => console.log(val)))
-          .catch(error => console.error())
+        // let hashtagid = this.getRandomInt(10000000000).toString()
+        // this.networkingService.getUserFromNetwork(hashtagid)
+        // .then(observable => observable.subscribe(val => console.log(val)))
+        // .catch(error => {
+        //   console.error()
+        //   console.log("im catch teil")
+        //   let user = [new createPerson(hashtagid, hashtags[i])]
+        //   let rootUser= new rootCreatePerson(user);
+        //   this.networkingService.addUserToNetwork(rootUser)
+        //   .then(observable => observable.subscribe(val => console.log(val)))
+        //   .catch(error => console.error())
         
-        })
-
-
+        // })
+        
+        var sendableHashtag = hashtags[i].replace("#", "%23")
+        this.networkingService.addHashtagToNetwork(sendableHashtag).then(observable => observable.subscribe(val => console.log(val)))
 
       }
 
@@ -149,6 +150,10 @@ export class MainpageComponent implements OnInit {
     splitted.forEach(word => {
       if(word[0] !== "#"){
         word = "#" + word    
+      }
+
+      if(word.length>1){
+        if(word[0] == "#" && word[1]=="#")word = word.substring(1,word.length)
       }
       correctedHastags.push(word)
     });
@@ -220,7 +225,7 @@ export class MainpageComponent implements OnInit {
   getAllUsersFromNetwork(){
     this.networkingService.getAllUsersFromNetwork().then(observable => observable.subscribe(val => {
       var recommendetUsers:responseGetPerson[] = this.shuffleArray(val)
-
+      
       let forDeletion = [parseInt(localStorage.getItem("userId"))]
       forDeletion.join(this.following)
       for(let i= 0; i<this.following.length; i++){
@@ -343,9 +348,9 @@ export class MainpageComponent implements OnInit {
     var year = parseInt(date.substring(0,4))
     var month = parseInt(date.substring(5,7))
     var day = parseInt(date.substring(8,10))
-    var hour = parseInt(date.substring(11,13))
-    var min = parseInt(date.substring(14,16))
-    var sec = parseInt(date.substring(17,19))
+    var hour = date.substring(11,13)
+    var min = date.substring(14,16)
+    var sec = date.substring(17,19)
     var correctDate: string;
     correctDate = day+"."+month+"."+year + "   " +hour+":"+min+":"+sec
     return correctDate

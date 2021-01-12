@@ -295,8 +295,9 @@
 												</div>
 											</div>
 											<div class="job_descp">
+												<div style="height: 15px;"></div>
 												<p>{{post.content}}</p>
-												<ul class="skill-tags" >
+												<ul class="skill-tags" *ngIf="post.hashtags.length == 1 && post.hashtags[0] !== ''" style="margin-bottom: -10px;">
 													<li *ngFor="let hashtag of post.hashtags"><a href="javascript:;" title="">{{hashtag}}</a></li>
 												</ul>
 											</div>
@@ -426,6 +427,9 @@
 									<li><button class="active" type="button" value="post" (click)="submitPost()">Post</button></li>
 									<li><a href="javascript:;" title="" (click)="removeOverlay()">Cancel</a></li>
 								</ul>
+								<div *ngIf = "notAllPostingFiledFilledOut == true" class="alert alert-danger response fadeIn" role="alert" style="width: 80%; margin: 0px auto 20px auto;">
+									"Gefühlslage und Inhalt des Postings muss ausgefüllt sein!"
+								  </div>
 							</div>
 						</div>
 					</form>
