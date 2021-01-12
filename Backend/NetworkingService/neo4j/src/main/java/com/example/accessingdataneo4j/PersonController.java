@@ -277,6 +277,18 @@ public class PersonController {
         return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
     }
 
+    @GetMapping("/subscribedHashtags/{1}")
+    public ResponseEntity getMySubscribedHashtags(@PathVariable("1") final int id){
+        if(transaction.personExists(id)){
+            if(transaction.getSubscribedHashtags(id).isEmpty()){
+                return ResponseEntity.ok("{\"subscriptions\": [] }");
+            }
+            return ResponseEntity.ok("{\"subscriptions\": " +
+                    transaction.getSubscribedHashtags(id).toString() + "}");
+        }
+        return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
+    }
+
 
 
     /**

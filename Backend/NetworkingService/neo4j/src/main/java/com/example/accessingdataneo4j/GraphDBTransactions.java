@@ -493,6 +493,29 @@ public class GraphDBTransactions implements AutoCloseable{
         return allPersons;
     }
 
+    public List<String> getSubscribedHashtags(int id){
+        Session session = driver.session();
+        List<String> allPersons;
+        allPersons = session.readTransaction(new TransactionWork<List<String>>(){
+            @Override
+            public List<String> execute(Transaction tx)
+            {
+                ArrayList<String> followsPerson = new ArrayList<>();
+                Result result = tx.run(  "MATCH (p:Person { id: $id })" +
+                                "OPTIONAL MATCH (p)-[r:FOLLOWS]->(h:Hashtag)" +
+                                "RETURN p.id, p.name, collect(h.id) as follows",
+                        parameters("id", id));
+                List follows = null;
+                while (result.hasNext()){
+                    Record r = result.next();
+                    follows = r.get("follows").asList();
+                }
+                return follows;
+            }
+        });
+        return allPersons;
+    }
+
 
     //GET all followers of a person (all persons who were following this person)
     public List<String> getFollowers(int id){
