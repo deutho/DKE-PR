@@ -224,6 +224,7 @@ export class MainpageComponent implements OnInit {
 
   getAllUsersFromNetwork(){
     this.networkingService.getAllUsersFromNetwork().then(observable => observable.subscribe(val => {
+      console.log(val)
       var recommendetUsers:responseGetPerson[] = this.shuffleArray(val)
       
       let forDeletion = [parseInt(localStorage.getItem("userId"))]

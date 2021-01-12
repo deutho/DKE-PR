@@ -227,7 +227,7 @@
                                     <div style="height: 150px;"></div>
 									<div class="user_profile">
 										<div class="user-pro-img">
-											<img src="./../../assets/images/resources/user-pro-img.png" alt="">
+											<img src='{{"./../../assets/images/" + userMood + ".png"}}' alt="">
 											<div class="add-dp" id="OpenImgUpload">
 												<input type="file" id="file">
 																							
@@ -251,9 +251,9 @@
 							<div class="col-lg-6">
 								<div class="main-ws-sec">
 									<div class="user-tab-sec">
-										<h3>John Doe</h3>
+										<h3>{{vorname}} {{nachname}}</h3>
 										<div class="star-descp">
-											<span>Graphic Designer at Self Employed</span>
+											<span>{{status}}</span>
 										</div><!--star-descp end-->
 									</div>
                                     <div style="height: 90px"></div>
@@ -787,49 +787,46 @@
 									</div>
 									<div class="product-feed-tab current" id="feed-dd">
 										<div class="posts-section">
-                                            <div class="post-bar">
-                                                <div class="post_topbar">
-                                                    <div class="usy-dt">
-                                                        <!-- <img src="./../../assets/images/resources/us-pic.png" alt=""> -->
-                                                        <div class="usy-name">
-                                                            <h3>John Doe</h3>
-                                                            <span><img src="./../../assets/images/clock.png" alt="">3 min ago</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="ed-opts">
-                                                        <a href="javascript:;" title="" class="ed-opts-open"><i class="la la-ellipsis-v"></i></a>
-                                                        <ul class="ed-options">
-                                                            <li><a href="javascript:;" title="">Edit Post</a></li>
-                                                            <li><a href="javascript:;" title="">Unsaved</a></li>
-                                                            <li><a href="javascript:;" title="">Unbid</a></li>
-                                                            <li><a href="javascript:;" title="">Close</a></li>
-                                                            <li><a href="javascript:;" title="">Hide</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div class="job_descp">
-                                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam luctus hendrerit metus, ut ullamcorper quam finibus at. Etiam id magna sit amet... <a href="javascript:;" title="">view more</a></p>
-                                                    <ul class="skill-tags">
-                                                        <li><a href="javascript:;" title="">HTML</a></li>
-                                                        <li><a href="javascript:;" title="">PHP</a></li>
-                                                        <li><a href="javascript:;" title="">CSS</a></li>
-                                                        <li><a href="javascript:;" title="">Javascript</a></li>
-                                                        <li><a href="javascript:;" title="">Wordpress</a></li> 	
-                                                    </ul>
-                                                </div>
-                                                <div class="job-status-bar">
-                                                    <ul class="like-com">
-                                                        <li>
-                                                            <a href="javascript:;" ><i class="fas fa-heart"></i> Like</a>
-                                                            <!-- <img src="./../../assets/images/liked-img.png" alt=""> -->
-                                                            <!-- <span>25</span> -->
-                                                            <span style="background-color: transparent;"></span>
-                                                        </li> 
-                                                        <li><a href="javascript:;" class="com"><i class="fas fa-comment-alt"></i> Kommentare 15</a></li>
-                                                    </ul>
-                                                    <a href="javascript:;"><i class="fas fa-eye"></i>Gesehen 50</a>
-                                                </div>
-                                            </div><!--post-bar end-->
+											<div class="post-bar" *ngFor="let post of allPostings">
+												<div class="post_topbar">
+													<div class="usy-dt">
+														<img class="small-profile-mood" src='{{"./../../assets/images/" + post.emotion + ".png"}}' alt="">
+														<div class="usy-name" >
+															<h3 style="cursor: pointer;" (click)="setProfilePageID(post.creator)" routerLink="/profilepage">{{post.name}}</h3>
+															<span><img src="./../../assets/images/clock.png" alt="">{{dateFormatter(post.created)}}</span>
+														</div>
+													</div>
+													<div class="ed-opts">
+														<a href="javascript:;" title="" class="ed-opts-open"><i class="la la-ellipsis-v"></i></a>
+														<ul class="ed-options">
+															<li><a href="javascript:;" title="">Edit Post</a></li>
+															<li><a href="javascript:;" title="">Unsaved</a></li>
+															<li><a href="javascript:;" title="">Unbid</a></li>
+															<li><a href="javascript:;" title="">Close</a></li>
+															<li><a href="javascript:;" title="">Hide</a></li>
+														</ul>
+													</div>
+												</div>
+												<div class="job_descp">
+													<div style="height: 15px;"></div>
+													<p>{{post.content}}</p>
+													<ul class="skill-tags" *ngIf="post.hashtags.length == 1 && post.hashtags[0] !== ''" style="margin-bottom: -10px;">
+														<li *ngFor="let hashtag of post.hashtags"><a href="javascript:;" title="">{{hashtag}}</a></li>
+													</ul>
+												</div>
+												<!-- <div class="job-status-bar">
+													<ul class="like-com">
+														<li>
+															<a href="javascript:;"><i class="fas fa-heart"></i> Like</a>
+															<img src="./../../assets/images/liked-img.png" alt="">
+															<span>25</span>
+															<span style="background-color: transparent;"></span>
+														</li> 
+														<li><a href="javascript:;" class="com"><i class="fas fa-comment-alt"></i> Kommentare 15</a></li>
+													</ul>
+													<a href="javascript:;"><i class="fas fa-eye"></i>Gesehen 50</a>
+												</div> -->
+											</div><!--post-bar end-->
 
 										</div><!--posts-section end-->
 									</div><!--product-feed-tab end-->
@@ -1249,7 +1246,7 @@
 											<div class="post-bar">
 												<div class="post_topbar post-bid">
 													<div class="usy-dt">
-														<img src="./../../assets/images/resources/Jassica.jpg" alt="">
+														<img src="./../../assets/images/resources/ny-img1.png" alt="">
 														<div class="usy-name">
 														<h3>John Doe</h3>
 														<div class="epi-sec epi2">
@@ -1942,7 +1939,7 @@
 									</div>
 									
 									<div class="widget suggestions full-width">
-                                        <div></div>
+                                        <div style="border-top: 4px solid #e44d3a;"></div>
 										<div class="sd-title">                                            
 											<h3>Personen, welche du vielleicht kennst</h3>
 											<i class="la la-ellipsis-v"></i>
@@ -1951,7 +1948,7 @@
 											<div class="suggestion-usd"  *ngIf="recommendedUser1.name !== '' && showRec1 == true">
 												<img class="small-profile-mood" src='{{"./../../assets/images/" + recommendedUser1Emotion + ".png"}}' alt="">
 												<div class="sgt-text">
-													<h4>{{recommendedUser1.name}}</h4>
+													<h4 style="cursor: pointer;" (click)="setProfilePageID(recommendedUser1.id_person)" routerLink="/profilepage">{{recommendedUser1.name}}</h4>
 													<span>{{recommendedUser1Status}}</span>
 												</div>
 												<span><i class="la la-plus" (click)="follow(recommendedUser1.id_person, 1)"></i></span>
@@ -1959,7 +1956,7 @@
 											<div class="suggestion-usd"  *ngIf="recommendedUser2.name !== ''  && showRec2 == true">
 												<img class="small-profile-mood" src='{{"./../../assets/images/" + recommendedUser2Emotion + ".png"}}' alt="">
 												<div class="sgt-text">
-													<h4>{{recommendedUser2.name}}</h4>
+													<h4 style="cursor: pointer;"  (click)="setProfilePageID(recommendedUser2.id_person)" routerLink="/profilepage">{{recommendedUser2.name}}</h4>
 													<span>{{recommendedUser2Status}}</span>
 												</div>
 												<span><i class="la la-plus" (click)="follow(recommendedUser2.id_person, 2)"></i></span>
@@ -1967,7 +1964,7 @@
 											<div class="suggestion-usd"  *ngIf="recommendedUser3.name !== ''  && showRec3 == true">
 												<img class="small-profile-mood" src='{{"./../../assets/images/" + recommendedUser3Emotion + ".png"}}' alt="">
 												<div class="sgt-text">
-													<h4>{{recommendedUser3.name}}</h4>
+													<h4 style="cursor: pointer;"  (click)="setProfilePageID(recommendedUser3.id_person)" routerLink="/profilepage">{{recommendedUser3.name}}</h4>
 													<span>{{recommendedUser3Status}}</span>
 												</div>
 												<span><i class="la la-plus" (click)="follow(recommendedUser3.id_person, 3)"></i></span>
@@ -1975,7 +1972,7 @@
 											<div class="suggestion-usd"  *ngIf="recommendedUser4.name !== ''  && showRec4 == true">
 												<img class="small-profile-mood" src='{{"./../../assets/images/" + recommendedUser4Emotion + ".png"}}' alt="">
 												<div class="sgt-text">
-													<h4>{{recommendedUser4.name}}</h4>
+													<h4 style="cursor: pointer;"  (click)="setProfilePageID(recommendedUser4.id_person)" routerLink="/profilepage">{{recommendedUser4.name}}</h4>
 													<span>{{recommendedUser4Status}}</span>
 												</div>
 												<span><i class="la la-plus" (click)="follow(recommendedUser4.id_person, 4)"></i></span>
@@ -1983,7 +1980,7 @@
 											<div class="suggestion-usd" *ngIf="recommendedUser5.name !== ''  && showRec5 == true">
 												<img class="small-profile-mood" src='{{"./../../assets/images/" + recommendedUser5Emotion + ".png"}}' alt="">
 												<div class="sgt-text">
-													<h4>{{recommendedUser5.name}}</h4>
+													<h4 style="cursor: pointer;"  (click)="setProfilePageID(recommendedUser5.id_person)" routerLink="/profilepage">{{recommendedUser5.name}}</h4>
 													<span>{{recommendedUser5Status}}</span>
 												</div>
 												<span><i class="la la-plus" (click)="follow(recommendedUser5.id_person, 5)"></i></span>
@@ -1991,7 +1988,7 @@
 											<div class="suggestion-usd" *ngIf="recommendedUser6.name !== ''  && showRec6 == true">
 												<img class="small-profile-mood" src='{{"./../../assets/images/" + recommendedUser6Emotion + ".png"}}' alt="">
 												<div class="sgt-text">
-													<h4>{{recommendedUser6.name}}</h4>
+													<h4 style="cursor: pointer;"  (click)="setProfilePageID(recommendedUser6.id_person)" routerLink="/profilepage">{{recommendedUser6.name}}</h4>
 													<span>{{recommendedUser6Status}}</span>
 												</div>
 												<span><i class="la la-plus" (click)="follow(recommendedUser6.id_person, 6)"></i></span>
@@ -2024,7 +2021,7 @@
 						<li><a href="javascript:;" title="">Copyright Policy</a></li>
 					</ul>
 					<p><img src="./../../assets/images/copy-icon2.png" alt="">Copyright 2019</p>
-					<img class="fl-rgt" src="./../../assets/images/logo2.png" alt="">
+					<!-- <img class="fl-rgt" src="./../../assets/images/logo2.png" alt="">7 -->
 				</div>
 			</div>
 		</footer><!--footer end-->

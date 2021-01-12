@@ -2638,11 +2638,12 @@ footer {
 }
 .user-pro-img {
 	float: left;
-	width: 100%;
+	width: 70%;
 	text-align: center;
-	margin-bottom: 28px;
-	margin-top: -95px;
+	/* margin-bottom: 28px;
+	margin-top: -95px; */
 	position: relative;
+	margin: -95px auto 28px 38px
 }
 .user-pro-img .add-dp {
 	position: absolute;

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { posting } from '../models/posting';
 import { responseGetPerson } from '../models/userNetwork';
 import { networkingService } from '../services/networkingService';
 import { postingService } from '../services/postingService';
@@ -16,7 +17,7 @@ import { userService } from '../services/userService';
   ]
 })
 export class ProfilepageComponent implements OnInit {
-  allPostings: any;
+  allPostings: posting[] = [];
   userMood: any;
   following;
   followers: any;
@@ -60,10 +61,10 @@ export class ProfilepageComponent implements OnInit {
     if(localStorage.getItem("token") == null) {
       this.router.navigate(['login'])
     }
-    this.setUserData()    
+    this.loadProfileData()    
 
   }
-  
+
   logout(){
     this.router.navigate(['login'])
     localStorage.removeItem("token");
@@ -74,15 +75,39 @@ export class ProfilepageComponent implements OnInit {
     localStorage.removeItem("status");
   }
 
+  loadProfileData(){
+    this.userService.getUserData(localStorage.getItem("profileID"))
+    .then(observable => observable.subscribe(val => {
+      // val[0]      
+      if(val[0][0] != undefined){
+      localStorage.setItem('vorname', val[0][0].vorname)
+      localStorage.setItem('nachname',val[0][0].nachname)
+      localStorage.setItem('email',val[0][0].email)
+      localStorage.setItem('status',val[0][0].status)
+      this.userMood = "happy"
+      }
+      else{
+        localStorage.setItem('vorname', localStorage.getItem("profileID"))
+        localStorage.setItem('nachname',"")
+        localStorage.setItem('email', "")
+        localStorage.setItem('status',"")
+        this.userMood = "hashtag"
+      }
+      this.setUserData()
+    }))
+  }
+
   async setUserData(){
     this.userID = localStorage.getItem("userId")
-    this.profileID = localStorage.getItem("profileId")
+    this.profileID = localStorage.getItem("profileID")
     this.vorname = localStorage.getItem("vorname");
     this.nachname = localStorage.getItem("nachname");
     this.email = localStorage.getItem("email");
     localStorage.getItem("status") !== "null"? this.status = localStorage.getItem("status"):this.status = "";
     this.getUserFromNetworkInitial(this.userID)
-    
+    console.log("profileid")
+    console.log(this.profileID)
+    console.log(localStorage)
   }
 
   getUserFromNetworkInitial(id){
@@ -106,6 +131,12 @@ export class ProfilepageComponent implements OnInit {
     // document.getElementById("wrapper").setAttribute('aria-disabled', 'false');
     // document.getElementById("wrapper").classList.add("overlay");
     // document.getElementById("wrapper").classList.add("overlay-transparent");
+  }
+
+  setProfilePageID(id){
+    if(id == "local") id = this.userID
+    localStorage.setItem("profileID", id)
+    window.location.reload();
   }
 
   getFollowersOfUser(id) {
@@ -207,15 +238,31 @@ export class ProfilepageComponent implements OnInit {
 
   getAllPostings(){
     
-    this.postingService.getPostingsOfUser(localStorage.getItem("userId")).then(observable => observable.subscribe(val => {
+    this.postingService.getPostingsOfUser(this.profileID).then(observable => observable.subscribe(val => {
+      console.log(val)
       for(var i = 0; i<val.postings.length; i++){
         this.allPostings.push(val.postings[i])
       }
+      if(this.allPostings !== undefined){
       this.allPostings.sort((n1, n2) => {return new Date(n2.created).getTime() - new Date(n1.created).getTime() });
-      this.userMood = this.allPostings[0] != undefined? this.allPostings[0].emotion: "happy"      
+      this.userMood = this.allPostings[0] != undefined? this.allPostings[0].emotion: this.userMood   
+      }
     }))
 
     this.loaded = true
+  }
+
+  dateFormatter(date: string){7
+    var year = parseInt(date.substring(0,4))
+    var month = parseInt(date.substring(5,7))
+    var day = parseInt(date.substring(8,10))
+    var hour = date.substring(11,13)
+    var min = date.substring(14,16)
+    var sec = date.substring(17,19)
+    var correctDate: string;
+    correctDate = day+"."+month+"."+year + "   " +hour+":"+min+":"+sec
+    return correctDate
+
   }
 
 
