@@ -34,12 +34,12 @@ export class ProfilepageComponent implements OnInit {
   constructor(private router: Router, private networkingService: networkingService, private postingService: postingService, private userService: userService) { }
   overlayIsActive = false;
   loaded = true;
-  recommendedUser1: responseGetPerson = new responseGetPerson(0,"",[]);
-  recommendedUser2: responseGetPerson = new responseGetPerson(0,"",[]);
-  recommendedUser3: responseGetPerson = new responseGetPerson(0,"",[]);
-  recommendedUser4: responseGetPerson = new responseGetPerson(0,"",[]);
-  recommendedUser5: responseGetPerson = new responseGetPerson(0,"",[]);
-  recommendedUser6: responseGetPerson = new responseGetPerson(0,"",[]);
+  recommendedUser1: responseGetPerson = new responseGetPerson("0","",[]);
+  recommendedUser2: responseGetPerson = new responseGetPerson("0","",[]);
+  recommendedUser3: responseGetPerson = new responseGetPerson("0","",[]);
+  recommendedUser4: responseGetPerson = new responseGetPerson("0","",[]);
+  recommendedUser5: responseGetPerson = new responseGetPerson("0","",[]);
+  recommendedUser6: responseGetPerson = new responseGetPerson("0","",[]);
   recommendedUser1Status: string;
   recommendedUser2Status: string;
   recommendedUser3Status: string;
@@ -173,7 +173,7 @@ export class ProfilepageComponent implements OnInit {
     this.networkingService.getAllUsersFromNetwork().then(observable => observable.subscribe(val => {
       var recommendetUsers:responseGetPerson[] = this.shuffleArray(val)
       
-      let forDeletion = [parseInt(localStorage.getItem("userId"))]
+      let forDeletion = [localStorage.getItem("userId")]
       forDeletion.join(this.following)
       for(let i= 0; i<this.following.length; i++){
         forDeletion.push(this.following[i])
