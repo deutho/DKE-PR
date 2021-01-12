@@ -327,6 +327,10 @@ public class PersonController {
         return transaction.getAllPersons();
     }
 
+    @GetMapping("/allHashtags")
+    public List<Hashtag> getHashtags(){
+        return transaction.getAllHashtags();
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity getPersonById(@PathVariable int id){

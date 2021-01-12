@@ -1,6 +1,8 @@
 package com.example.accessingdataneo4j;
 
 import org.neo4j.ogm.annotation.NodeEntity;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @NodeEntity
@@ -8,16 +10,18 @@ public class Person {
 
 	private int id_person;
 	private String name;
-	private List follows;
+	private List followsPersons;
+	private List followsHashtags;
 
 	Person() {
 		// Empty constructor required as of Neo4j API 2.0.5
 	};
 
-	public Person(int id_person, String name, List follows){
+	public Person(int id_person, String name, List followsPersons, List followsHashtags){
 		this.id_person = id_person;
 		this.name = name;
-		this.follows = follows;
+		this.followsPersons = followsPersons;
+		this.followsHashtags = followsHashtags;
 	}
 
 	public String getName() {
@@ -33,6 +37,6 @@ public class Person {
 	public void setId_person(int id_person){ this.id_person = id_person;}
 
 	public List getFollowPersons(){
-		return this.follows;
+		return this.followsPersons;
 	}
 }

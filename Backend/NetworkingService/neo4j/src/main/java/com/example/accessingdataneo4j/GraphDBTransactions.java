@@ -50,7 +50,7 @@ public class GraphDBTransactions implements AutoCloseable{
                                     "SET a.id = $id, a.name = $name " +
                                     "RETURN a.id, a.name + ', from node ' + id(a)",
                             parameters( "name", finalName, "id", finalId) );
-                    return (new Person(finalId, finalName, null));
+                    return (new Person(finalId, finalName, null, null));
                 }
             });
         }
@@ -72,7 +72,7 @@ public class GraphDBTransactions implements AutoCloseable{
                                     "SET a.id = $id, a.name = $name " +
                                     "RETURN a.id, a.name + ', from node ' + id(a)",
                             parameters( "name", name , "id", id) );
-                    return (new Person(id, name, null));
+                    return (new Person(id, name, null, null));
                 }
             });
         }
@@ -284,26 +284,81 @@ public class GraphDBTransactions implements AutoCloseable{
             @Override
             public List<Person> execute(Transaction tx)
             {
-                List<Person> persons = new ArrayList<Person>();
-                Result result = tx.run(  "MATCH (p:Person)" +
-                        "OPTIONAL MATCH (p)-[r:FOLLOWS]->(p2:Person)" +
-                        "RETURN p.id, p.name, collect(p2.id) as follows");
+                List<Person> persons = new ArrayList<>();
+                Result result = tx.run(  "MATCH (p:Person) " +
+                        "OPTIONAL MATCH (p)-[r:FOLLOWS]->(p2:Person) " +
+                        "OPTIONAL MATCH (p)-[f:FOLLOWS]->(h:Hashtag) " +
+                        "RETURN p.id, p.name, collect(p2.id) as persons, collect(h.id) as hashtags");
                 while (result.hasNext()){
                     Record r = result.next();
                     int id = r.get("p.id").asInt();
                     String name = r.get("p.name").asString();
-                    List follows = r.get("follows").asList();
-                    ArrayList<String> followsPerson = new ArrayList<>();
+                    List followsPersons = r.get("persons").asList();
 
-                    for(Object f : follows){
-                        followsPerson.add(follows.toString());
+                    ArrayList<String> followsP = new ArrayList<>();
+                    List<String> followsH = getAllHashtagsOfAPerson(id);
+
+                    for(Object f : followsPersons){
+                        followsP.add(followsPersons.toString());
                     }
-                    persons.add(new Person(id, name, follows));
+
+                    persons.add(new Person(id, name, followsP, followsH));
                 }
                 return persons;
             }
         });
         return allPersons;
+    }
+
+    public List<Hashtag> getAllHashtags(){
+        Session session = driver.session();
+        List<Hashtag> hashtag;
+        hashtag = session.readTransaction(new TransactionWork<List<Hashtag>>(){
+            @Override
+            public List<Hashtag> execute(Transaction tx)
+            {
+                List<Hashtag> hashtags = new ArrayList<Hashtag>();
+                Result result = tx.run(  "MATCH (p:Hashtag)" +
+                        "RETURN p.id" );
+                while (result.hasNext()){
+                    Record r = result.next();
+                    String id = r.get("p.id").asString();
+                    hashtags.add(new Hashtag(id));
+                }
+                return hashtags;
+            }
+        });
+        return hashtag;
+    }
+
+    public List<String> getAllHashtagsOfAPerson(int id){
+        Session session = driver.session();
+        List<String> allHashtags = new ArrayList<>();
+        allHashtags = session.readTransaction(new TransactionWork<List<String>>(){
+            @Override
+            public List<String> execute(Transaction tx)
+            {
+                List<String> hashtags = new ArrayList<>();
+                Result result = tx.run( "MATCH (p:Person { id: $id }) " +
+                        "OPTIONAL MATCH (p)-[r:FOLLOWS]->(h:Hashtag) " +
+                        "RETURN  collect(h.id) as hashtags" ,
+                parameters( "id", id));
+                while (result.hasNext()){
+                    Record r = result.next();
+                    List followsHashtags = r.get("hashtags").asList();
+                    System.out.println(followsHashtags.toString());
+
+                    ArrayList<String> followsH = new ArrayList<>();
+
+                    for(Object h : followsHashtags){
+                        followsH.add(followsHashtags.toString());
+                    }
+                    hashtags = followsH;
+                }
+                return hashtags;
+            }
+        });
+        return allHashtags;
     }
 
     //GET a person by id
@@ -337,7 +392,7 @@ public class GraphDBTransactions implements AutoCloseable{
                         followsPerson.add(follows.toString());
                     }
                 }
-                return (new Person(id, name, follows));
+                return (new Person(id, name, follows, null));
             }
         });
         return personById;
@@ -490,7 +545,7 @@ public class GraphDBTransactions implements AutoCloseable{
                                         "SET p.name = $new_name " +
                                         "RETURN p",
                                 parameters("id", finalId, "new_name", finalName));
-                        return (new Person(finalId, finalName, getSubscriptions(finalId)));
+                        return (new Person(finalId, finalName, getSubscriptions(finalId), null));
                     }
                 });
             }
@@ -511,7 +566,7 @@ public class GraphDBTransactions implements AutoCloseable{
                                         "SET p.name = $name_post " +
                                         "RETURN p",
                                 parameters("id", id, "name_post", name_post));
-                        return (new Person(id, name_post, getSubscriptions(id)));
+                        return (new Person(id, name_post, getSubscriptions(id), null));
                     }
                 });
             }
