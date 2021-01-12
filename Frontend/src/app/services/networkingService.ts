@@ -39,6 +39,10 @@ export class networkingService
         return await this.httpclient.post(apiurl + "followById/" + originID + "/" + targetID, null);
     }
 
+    async unfollowUserInNetwork(originID, targetID): Promise<Observable<any>> {
+        return await this.httpclient.delete(apiurl + "unfollowById/" + originID + "/" + targetID);
+    }
+
     async deleteUserFromNetwork(user): Promise<Observable<any>> {
         return await this.httpclient.delete(apiurl + "deletePersonById/" + user);
     }

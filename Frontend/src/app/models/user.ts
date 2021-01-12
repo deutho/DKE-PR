@@ -15,3 +15,9 @@ export class loginUser {
     public passwort: string
     ){}
 }
+
+export class setStatus {
+    public constructor(
+    public status: string
+    ) {}
+}

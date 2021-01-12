@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { observable } from 'rxjs';
 import { subscriptions } from '../models/subscriptions';
+import { setStatus } from '../models/user';
 import { networkingService } from '../services/networkingService';
 import { postingService } from '../services/postingService';
 import { userService } from '../services/userService';
@@ -39,10 +40,28 @@ export class FriendspageComponent implements OnInit {
     // document.getElementById("wrapper").classList.add("overlay");
     // document.getElementById("wrapper").classList.add("overlay-transparent");
   }
+  
+  unfollow(id){
+    this.networkingService.unfollowUserInNetwork(localStorage.getItem("userId"), id).then(observable => observable.subscribe(val => console.log(val)))
+    window.location.reload();
+  }
 
   openUserDropDown(){
     this.overlayIsActive = true;
     document.getElementById("users").style.display = "unset";
+  }
+
+  setProfilePageID(id){
+    localStorage.setItem("profileID", id)
+  }
+
+  setStatus(){
+    var status = new setStatus((<HTMLSelectElement>document.getElementById("statusValueHTMLElement")).value)
+    this.userService.setStatus(status, localStorage.getItem("userId")).then(observable => observable.subscribe(val => {
+      // window.location.reload();
+      (<HTMLSelectElement>document.getElementById("statusValueHTMLElement")).value = ""
+      this.removeAllOverlays()
+    }))    
   }
 
   getFollowing(){

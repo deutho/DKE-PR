@@ -25,5 +25,9 @@ export class userService
         return await this.httpclient.get(apiurl + "user/"+id)
     }
 
+    async setStatus(status, id): Promise<Observable<any>> {
+        return await this.httpclient.put(apiurl + "setStatus/"+id, status)
+    }
+
 
 }

@@ -189,8 +189,8 @@
 							<h3>Custom Status</h3>
 							<div class="search_form">
 								<form>
-									<input type="text" name="search">
-									<button type="submit">Ok</button>
+									<input type="text" name="search" id="statusValueHTMLElement">
+									<button type="button" (click)="setStatus()">Ok</button>
 								</form>
 							</div><!--search_form end-->
 							<h3>Setting</h3>
@@ -224,10 +224,10 @@
 									<h3>{{sub.name}}</h3>
 									<h4>{{sub.status}}</h4>
 									<ul>
-										<li><a title="" class="follow" style="color: white; cursor: pointer;">Entfolgen</a></li>
+										<li><a title="" class="follow" style="color: white; cursor: pointer;" (click)="unfollow(sub.userId)">Entfolgen</a></li>
 									</ul>
 								</div>
-								<a routerLink="/profilepage" href="javascript:;" title="" class="view-more-pro">Profilseite ansehen</a>
+								<a href="javascript:;" title="" class="view-more-pro" (click)="setProfilePageID(sub.userId)" routerLink="/profilepage">Profilseite ansehen</a>
 							</div><!--company_profile_info end-->
 						</div>
 						

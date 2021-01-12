@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { posting } from '../models/posting';
+import { setStatus } from '../models/user';
 import { responseGetPerson } from '../models/userNetwork';
 import { networkingService } from '../services/networkingService';
 import { postingService } from '../services/postingService';
@@ -148,6 +149,17 @@ export class ProfilepageComponent implements OnInit {
       this.getAllUsersFromNetwork()
     }))
 
+  }
+
+
+  
+  setStatus(){
+    var status = new setStatus((<HTMLSelectElement>document.getElementById("statusValueHTMLElement")).value)
+    this.userService.setStatus(status, localStorage.getItem("userId")).then(observable => observable.subscribe(val => {
+      // window.location.reload();
+      (<HTMLSelectElement>document.getElementById("statusValueHTMLElement")).value = ""
+      this.removeAllOverlays()
+    }))    
   }
 
   openUserDropDown(){

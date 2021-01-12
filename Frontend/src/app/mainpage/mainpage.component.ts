@@ -4,7 +4,7 @@ import { from, observable, Observable, of } from 'rxjs';
 import { networkingService} from './../services/networkingService'
 import { createPerson, responseGetPerson, rootCreatePerson} from '../models/userNetwork'
 import { userService } from '../services/userService';
-import { user } from '../models/user';
+import { loginUser, user, setStatus } from '../models/user';
 import { postingService } from '../services/postingService';
 import { posting } from '../models/posting';
 
@@ -140,7 +140,6 @@ export class MainpageComponent implements OnInit {
   removeOverlay(){
     document.getElementById("popup").classList.remove("active");
     document.getElementById("wrapper").classList.remove("overlay");
-
   }
 
   checkForHashtags(){
@@ -361,6 +360,13 @@ export class MainpageComponent implements OnInit {
   setProfilePageID(id){
     if(id == "local") id = this.userID
     localStorage.setItem("profileID", id)
+  }
+
+  setStatus(){
+    var status = new setStatus((<HTMLSelectElement>document.getElementById("statusValueHTMLElement")).value)
+    this.userService.setStatus(status, localStorage.getItem("userId")).then(observable => observable.subscribe(val => {
+      window.location.reload();
+    }))    
   }
 
 }
