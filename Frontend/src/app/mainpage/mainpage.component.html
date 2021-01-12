@@ -238,7 +238,7 @@
 												<span>{{followersCount}}</span>
 											</li>
 											<li>
-												<a routerLink="/profilepage" title="">Profilseite ansehen</a>
+												<a  title="" (click)="setProfilePageID('local')" routerLink="/profilepage">Profilseite ansehen</a>
 											</li>
 										</ul>
 									</div><!--user-data end-->									
@@ -278,8 +278,8 @@
 											<div class="post_topbar">
 												<div class="usy-dt">
 													<img class="small-profile-mood" src='{{"./../../assets/images/" + post.emotion + ".png"}}' alt="">
-													<div class="usy-name">
-														<h3>{{post.name}}</h3>
+													<div class="usy-name" >
+														<h3 style="cursor: pointer;" (click)="setProfilePageID(post.creator)" routerLink="/profilepage">{{post.name}}</h3>
 														<span><img src="./../../assets/images/clock.png" alt="">{{dateFormatter(post.created)}}</span>
 													</div>
 												</div>

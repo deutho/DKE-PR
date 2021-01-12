@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { observable } from 'rxjs';
+import { subscriptions } from '../models/subscriptions';
 import { networkingService } from '../services/networkingService';
 import { postingService } from '../services/postingService';
 import { userService } from '../services/userService';
@@ -19,8 +21,8 @@ export class FriendspageComponent implements OnInit {
   overlayIsActive = false;
   following;
   loaded = false;
-
-
+  userIdInProcess;
+  subs: subscriptions[];
   ngOnInit(): void {
     this.getFollowing();
   }
@@ -44,7 +46,53 @@ export class FriendspageComponent implements OnInit {
   }
 
   getFollowing(){
-    this.networkingService.getSubscriptionsOfUserFromNetwork(localStorage.getItem("userId"))
+    this.subs = [] ;
+    //get subscriptions
+    this.networkingService.getSubscriptionsOfUserFromNetwork(localStorage.getItem("userId")).then(observable => observable.subscribe(val => {
+      var subscriptionIds: string[] = val.subscriptions
+      // console.log(subscriptionIds)
+      for(var i = 0; i<subscriptionIds.length; i++){
+        this.subs.push(new subscriptions(subscriptionIds[i], "happy", subscriptionIds[i], null))
+        this.userIdInProcess = subscriptionIds[i];
+        // console.log(this.userIdInProcess)
+
+        if(subscriptionIds[i][0] == "#") subscriptionIds[i] = "%23" + subscriptionIds[i].substring(1,subscriptionIds[i].length)
+        this.userService.getUserData(this.userIdInProcess).then(observable => observable.subscribe(val => {
+          if(val[0][0] != undefined){
+            var indexPostition = this.subs.findIndex(x => x.userId == val[0][0].id);
+            this.subs[indexPostition].name = val[0][0].vorname + " " +  val[0][0].nachname
+            this.subs[indexPostition].status = val[0][0].status
+          //   console.log(val[0][0].id)
+          // console.log(val[0][0].vorname)
+          // console.log(val[0][0].nachname)
+          // console.log(val[0][0].status)
+          }
+          else{
+
+          }
+        }))
+
+
+
+        // console.log(subs)
+
+        //get all postings of the person i am following do determine the mood
+        if(subscriptionIds[i][0] == "#") subscriptionIds[i] = "%23" + subscriptionIds[i].substring(1,subscriptionIds[i].length)
+        this.postingService.getPostingsOfUser(subscriptionIds[i]).then(observable => observable.subscribe(val => {       
+          val.postings.sort((n1, n2) => {return new Date(n2.created).getTime() - new Date(n1.created).getTime() })
+          var emotion = val.postings[0]!=undefined?val.postings[0].emotion:"happy"
+          if(val.postings[0] !== undefined) {
+            var indexPostition = this.subs.findIndex(x => x.userId == val.postings[0].creator);
+            this.subs[indexPostition].emotion = val.postings[0].emotion
+          }
+          
+          // console.log(this.subs)
+          
+        }))
+      }
+      
+    }))
+    console.log(this.subs)
     this.loaded = true;
   }
 

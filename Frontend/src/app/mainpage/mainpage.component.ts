@@ -357,4 +357,9 @@ export class MainpageComponent implements OnInit {
 
   }
 
+  setProfilePageID(id){
+    if(id == "local") id = this.userID
+    localStorage.setItem("profileID", id)
+  }
+
 }

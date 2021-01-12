@@ -216,12 +216,13 @@
 				</div><!--company-title end-->
 				<div class="companies-list">
 					<div class="row">
-						<div class="col-lg-3 col-md-4 col-sm-6 col-12">
+
+						<div class="col-lg-3 col-md-4 col-sm-6 col-12" *ngFor="let sub of subs">
 							<div class="company_profile_info">
 								<div class="company-up-info">
-									<img src="./../../assets/images/happy.png" alt="">
-									<h3>John Doe</h3>
-									<h4>Graphic Designer</h4>
+									<img src='{{"./../../assets/images/" + sub.emotion + ".png"}}' alt="">
+									<h3>{{sub.name}}</h3>
+									<h4>{{sub.status}}</h4>
 									<ul>
 										<li><a title="" class="follow" style="color: white; cursor: pointer;">Entfolgen</a></li>
 									</ul>
@@ -229,16 +230,9 @@
 								<a routerLink="/profilepage" href="javascript:;" title="" class="view-more-pro">Profilseite ansehen</a>
 							</div><!--company_profile_info end-->
 						</div>
+						
 					</div>
-				</div><!--companies-list end-->
-				<!-- <div class="process-comm">
-					<div class="spinner">
-						<div class="bounce1"></div>
-						<div class="bounce2"></div>
-						<div class="bounce3"></div>
-					</div>
-                </div> -->
-                <!--process-comm end-->
+				</div>
 			</div>
 		</section><!--companies-info end-->
 		<footer>
