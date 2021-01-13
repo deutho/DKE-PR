@@ -9,7 +9,7 @@
 	<meta name="keywords" content="" />
 </head>
 
-<div *ngIf="loaded == false" class="process-comm">
+<div *ngIf="loaded == true" class="process-comm">
 	<div class="spinner">
 		<div class="bounce1"></div>
 		<div class="bounce2"></div>
@@ -17,7 +17,7 @@
 	</div>
 </div>
 
-<body>	
+<body>
 
 	<!--  <button (click)="addUserToNetwork('3','Barbara3')">Add Barbara to Neo4J</button> -->
 	<!-- <button (click)="addUserToNetwork('1','Alfred1')">Add Alfred to Neo4J</button> -->
@@ -27,7 +27,7 @@
 	<!-- <button (click)="followUserInNetwork(23,1)">Follow User In Neo4J</button> -->
 	<!-- <button (click)="getPostingsOfUser(1)">Get all Postings of current user</button> -->
 	<div *ngIf="overlayIsActive" id="superoverlay" class="superoverlay" (click)="removeAllOverlays()"></div>
-	<div id="wrapper" class="wrapper">	
+	<div id="wrapper" class="wrapper">
 		<header>
 			<div class="container">
 				<div class="header-data">
@@ -47,14 +47,14 @@
 						<ul>
 							<li>
 								<a  routerLink="" title="">
-									Home									
+									Home
 								</a>
 							</li>
 							<li>
 								<a routerLink="/friends" style="text-align: left;" title="" >
 									Abonniert
 								</a>
-							</li>							
+							</li>
 							<li>
 								<a href="javascript:;" title="" class="not-box-openm">
 									Chat
@@ -206,7 +206,7 @@
 					</div>
 				</div><!--header-data end-->
 			</div>
-		</header><!--header end-->	
+		</header><!--header end-->
 
 		<main>
 			<div class="main-section">
@@ -222,7 +222,7 @@
 													<img src='{{"./../../assets/images/" + userMood + ".png"}}' alt="">
 												</div>
 											</div><!--username-dt end-->
-                                            
+
 											<div class="user-specs">
 												<h3>{{vorname}} {{nachname}}</h3>
 												<span>{{status}}</span>
@@ -241,7 +241,7 @@
 												<a  title="" (click)="setProfilePageID('local')" routerLink="/profilepage">Profilseite ansehen</a>
 											</li>
 										</ul>
-									</div><!--user-data end-->									
+									</div><!--user-data end-->
 									<div class="tags-sec full-width">
 										<ul>
 											<li><a href="javascript:;" title="">Hilfe Center</a></li>
@@ -254,7 +254,7 @@
 											<li><a href="javascript:;" title="">Copyright</a></li>
 										</ul>
 										<div class="cp-sec">
-											
+
 											<p><img src="./../../assets/images/cp.png" alt="">Copyright 2021</p>
 										</div>
 									</div><!--tags-sec end-->
@@ -268,7 +268,7 @@
 											<h3>Mir geht es...</h3>
 										</label>
 										<div id="postButton" class="post-st">
-											<ul>												
+											<ul>
 												<li><a class="post-jb active" href="javascript:;" title="" (click)="newPost()">Poste deine Stimmung</a></li>
 											</ul>
 										</div><!--post-st end-->
@@ -308,13 +308,13 @@
 														<img src="./../../assets/images/liked-img.png" alt="">
                                                         <span>25</span>
                                                         <span style="background-color: transparent;"></span>
-													</li> 
+													</li>
 													<li><a href="javascript:;" class="com"><i class="fas fa-comment-alt"></i> Kommentare 15</a></li>
 												</ul>
 												<a href="javascript:;"><i class="fas fa-eye"></i>Gesehen 50</a>
 											</div> -->
 										</div><!--post-bar end-->
-										
+
 
 										<!-- <div class="process-comm">
 											<div class="spinner">
@@ -328,10 +328,10 @@
 								</div><!--main-ws-sec end-->
 							</div>
 							<div class="col-lg-3 pd-right-none no-pd">
-								<div class="right-sidebar">																	
+								<div class="right-sidebar">
 									<div class="widget suggestions full-width">
                                         <div style="border-top: 4px solid #e44d3a;"></div>
-										<div class="sd-title">                                            
+										<div class="sd-title">
 											<h3>Personen, welche du vielleicht kennst</h3>
 											<i class="la la-ellipsis-v"></i>
 										</div><!--sd-title end-->
@@ -393,7 +393,7 @@
 							</div>
 						</div>
 					</div><!-- main-section-data end-->
-				</div> 
+				</div>
 			</div>
 		</main>
 
@@ -405,7 +405,7 @@
 				<h3>Poste deine Stimmung</h3>
 				<div class="post-project-fields">
 					<form>
-						<div class="row">			
+						<div class="row">
 							<div class="col-lg-12">
 								<div class="inp-field">
 									<select style="color: black" id="moodSelector">
@@ -438,16 +438,16 @@
 			</div><!--post-project end-->
 		</div><!--post-project-popup end-->
 
-		
 
 
 
-		
+
+
 
 	</div><!--theme-layout end-->
 
 
-<!-- 
+<!--
 <script type="text/javascript" src="./../../js/jquery.min.js"></script>
 <script type="text/javascript" src="./../../js/popper.js"></script>
 <script type="text/javascript" src="./../../js/bootstrap.min.js"></script>

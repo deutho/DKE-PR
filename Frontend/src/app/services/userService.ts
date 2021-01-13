@@ -10,10 +10,10 @@ var apiurl = 'http://localhost:3000/auth/';
 @Injectable()
 export class userService
 {
-    
+
     constructor(private httpclient: HttpClient) {}
 
-    async registerUser(user:user): Promise<Observable<any>> {       
+    async registerUser(user:user): Promise<Observable<any>> {
         return await this.httpclient.post(apiurl + "register", user)
     }
 
@@ -28,6 +28,22 @@ export class userService
     async setStatus(status, id): Promise<Observable<any>> {
         return await this.httpclient.put(apiurl + "setStatus/"+id, status)
     }
+
+    async setPasswort(passwort, id): Promise<Observable<any>> {
+    return await this.httpclient.put(apiurl + "setPasswort/"+id, passwort)
+    }
+
+  async setVorname(vorname, id): Promise<Observable<any>> {
+    return await this.httpclient.put(apiurl + "setVorname/"+id, vorname)
+  }
+
+  async setNachname(nachname, id): Promise<Observable<any>> {
+    return await this.httpclient.put(apiurl + "setNachname/"+id, nachname)
+  }
+
+  async setEmail(email, id): Promise<Observable<any>> {
+    return await this.httpclient.put(apiurl + "setEmail/"+id, email)
+  }
 
 
 }

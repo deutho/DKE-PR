@@ -10,9 +10,9 @@
 </head>
 
 
-<body>	
+<body>
 
-	<div class="wrapper">	
+	<div class="wrapper">
 
 		<header>
 			<div class="container">
@@ -33,14 +33,14 @@
 						<ul>
 							<li>
 								<a  routerLink="" title="">
-									Home									
+									Home
 								</a>
 							</li>
 							<li>
 								<a routerLink="/friends" style="text-align: left;" title="" >
 									Abonniert
 								</a>
-							</li>							
+							</li>
 							<li>
 								<a href="javascript:;" title="" class="not-box-openm">
 									Chat
@@ -192,7 +192,7 @@
 					</div>
 				</div><!--header-data end-->
 			</div>
-		</header><!--header end-->	
+		</header><!--header end-->
 
 
 		<section class="profile-account-setting">
@@ -216,67 +216,75 @@
 												<h5>Vorname</h5>
 												<div class="cpp-fiel">
 													<input type="text" id="inputVorname" name="old-password" placeholder="Vorname">
-													
+
 												</div>
 											</div>
 											<div class="cp-field">
 												<h5>Nachname</h5>
 												<div class="cpp-fiel">
 													<input type="text" id="inputNachname" name="new-password" placeholder="Nachname">
-													
+
 												</div>
 											</div>
 											<div class="cp-field">
 												<h5>E-Mail</h5>
 												<div class="cpp-fiel">
 													<input type="text" id="inputEmail" name="repeat-password" placeholder="E-Mail">
-													
+
 												</div>
 											</div>
 											<div class="save-stngs pd2">
 												<ul>
-													<li><button type="button" (click)="submitChangeName()">Save Setting</button></li>
+													<li><button type="button" (click)="submitChangeNameEmail()">Save Setting</button></li>
                                                 </ul>
-                                                <div *ngIf = "incorrectPassword == true" class="alert alert-danger response fadeIn" role="alert" style="width: 80%; margin: 10px auto 20px auto;">
+                                               <div *ngIf = "userSettings == true" class="alert alert-danger response fadeIn" role="alert" style="width: 80%; margin: 10px auto 20px auto;">
                                                     {{errorMessage}}
                                                   </div>
+
+                        <div *ngIf = "settingsChanged == true" class="item-final alert alert-success text-center" role="alert" style="width: 80%; margin: 0px auto 20px auto;">
+                          Erfolgreich geändert!
+                        </div>
 											</div><!--save-stngs end-->
 										</form>
                                         <form>
 											<div class="cp-field">
 												<h5>Old Password</h5>
 												<div class="cpp-fiel">
-													<input type="text" name="old-password" placeholder="Old Password">
+													<input type="password" id= "oldPassword"name="old-password" placeholder="Old Password">
 													<i class="fa fa-lock"></i>
 												</div>
 											</div>
 											<div class="cp-field">
 												<h5>New Password</h5>
 												<div class="cpp-fiel">
-													<input type="text" name="new-password" placeholder="New Password">
+													<input type="password"  id="newPassword" name="new-password" placeholder="New Password">
 													<i class="fa fa-lock"></i>
 												</div>
 											</div>
 											<div class="cp-field">
 												<h5>Repeat Password</h5>
 												<div class="cpp-fiel">
-													<input type="text" name="repeat-password" placeholder="Repeat Password">
+													<input type="password"  id="repeatPassword" name="repeat-password" placeholder="Repeat Password">
 													<i class="fa fa-lock"></i>
 												</div>
 											</div>
-											<div class="cp-field">
-												<h5><a href="#" title="">Forgot Password?</a></h5>
-                                            </div>
 											<div class="save-stngs pd2">
 												<ul>
 													<li><button type="button" (click)="submitChangePassword()">Save Setting</button></li>
                                                 </ul>
+                        <div *ngIf = "userPasswort == true" class="alert alert-danger response fadeIn" role="alert" style="width: 80%; margin: 10px auto 20px auto;">
+                          {{errorMessage}}
+                        </div>
+
+                        <div *ngIf = "passwortchanged == true" class="item-final alert alert-success text-center" role="alert" style="width: 80%; margin: 0px auto 20px auto;">
+                          Erfolgreich geändert!
+                        </div>
 											</div><!--save-stngs end-->
                                         </form>
 
 									</div><!--acc-setting end-->
 							  	</div>
-							  	
+
 							  	<div class="tab-pane fade" id="security-login" role="tabpanel" aria-labelledby="security">
 							  		<div class="privacy security">
 			                     <div class="row">
@@ -306,26 +314,26 @@
                                             <option>Select Second Queston</option>
                                           </select>
                                         </div>
-                                      </form>                                    
+                                      </form>
 			                     		<h3>Answer</h3>
 			                     		<form>
- 
+
                                        <div class="form-group">
                                          <input type="text" class="form-control" id="exampleInputPassword1" placeholder=" Answer here">
                                        </div>
-                                     </form>                                    
+                                     </form>
 										<div class="checkbox">
 											<div class="form-check">
 												<div class="custom-control custom-radio">
 													<input type="radio" id="customRadio1" name="customRadio" class="custom-control-input">
 													<label class="custom-control-label" for="customRadio1">I understand my account will be locked if I am unable to answer this question</label>
-												</div>                                                                      
+												</div>
 											</div>
 											<div class="form-check">
 												<div class="custom-control custom-radio">
 													<input type="radio" id="customRadio2" name="customRadio" class="custom-control-input">
 													<label class="custom-control-label" for="customRadio2">Remember this device</label>
-												</div>                                                   												  												
+												</div>
 											</div>
 										</div>
 									<hr>
@@ -335,7 +343,7 @@
 			                     	<a href="#">Save</a>
 			                     	<a href="#">Cancel</a>
 			                     </div>
-								</div> 
+								</div>
 							  	</div>
 							  	<div class="tab-pane fade" id="blockking" role="tabpanel" aria-labelledby="nav-blockking-tab">
 							  		<div class="helpforum">
@@ -356,8 +364,8 @@
 			                     </div>
 			                     </div>
 			                     </div>
-								</div> 
-							  	</div>	
+								</div>
+							  	</div>
 							  	<div class="tab-pane fade" id="privciy" role="tabpanel" aria-labelledby="nav-privcy-tab">
 							  		<div class="acc-setting">
 							  			<h3>Requests</h3>
@@ -571,7 +579,7 @@
 																<div class="custom-control custom-checkbox">
 																	<input type="checkbox" class="custom-control-input" id="customCheck10">
 																	<label class="custom-control-label" for="customCheck10">Clear All History</label>
-																</div>															
+																</div>
                                                             </form>
                                                              <div class="privabtns">
                                                              <a href="#">Clear All History</a>
