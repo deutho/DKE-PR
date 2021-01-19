@@ -7,18 +7,20 @@ import { userService } from '../services/userService';
 import { loginUser, user, setStatus } from '../models/user';
 import { postingService } from '../services/postingService';
 import { posting } from '../models/posting';
+import { notificationService } from '../services/notificationService';
 
 @Component({
   selector: 'app-mainpage',
   templateUrl: './mainpage.component.html',
   styleUrls: ['./mainpage.component.css'],
   providers: [networkingService,
-              postingService]
+              postingService,
+              notificationService]
 })
 export class MainpageComponent implements OnInit {
   userNameDropdown: string;
 
-  constructor(private router: Router, private postingService: postingService, private networkingService: networkingService, private userService: userService) { }
+  constructor(private router: Router, private notificationService: notificationService, private postingService: postingService, private networkingService: networkingService, private userService: userService) { }
   userID;
   vorname;
   nachname;
@@ -59,6 +61,11 @@ export class MainpageComponent implements OnInit {
   recommendedUser5Emotion: string= "happy";
   recommendedUser6Emotion: string= "happy";
   notAllPostingFiledFilledOut = false;
+  notifications: string[] = [];
+
+
+
+
   ngOnInit(): void {
     if(localStorage.getItem("token") == null) {
       this.router.navigate(['login'])
@@ -171,6 +178,7 @@ export class MainpageComponent implements OnInit {
   showNotifications(){
     this.overlayIsActive = true;
     document.getElementById("notification").style.display = "unset";
+    this.getNotifications();
     // document.getElementById("wrapper").setAttribute('aria-disabled', 'false');
     // document.getElementById("wrapper").classList.add("overlay");
     // document.getElementById("wrapper").classList.add("overlay-transparent");
@@ -205,19 +213,28 @@ export class MainpageComponent implements OnInit {
     this.networkingService.getUserFromNetwork(id).then(observable => observable.subscribe(val => {
       this.following = val.followPersons
       this.followingCount = val.followPersons.length
-      this.getFollowersOfUser(localStorage.getItem("userId"))      
+      this.getFollowedHashtags()        
+      
+    }))    
+  }
+
+  getFollowedHashtags(){
+    this.networkingService.getSubscriptionsOfHashtagsFromNetwork(localStorage.getItem("userId")).then(observable => observable.subscribe(val => {
+    // this.networkingService.getSubscriptionsOfHashtagsFromNetwork(localStorage.getItem("userId")).then(observable => observable.subscribe(val => {
+      // console.log(val)
+      this.getFollowersOfUser(localStorage.getItem("userId")) 
+      this.followingCount = this.followingCount + val.subscriptions.length
     }))
   }
 
   getFollowersOfUser(id) {
     this.networkingService.getFollowersOfUserFromNetwork(id).then(observable => observable.subscribe(val => {
-      console.log(val)
+      // console.log(val)
       this.followers = val.followers
       if(val.followers !== undefined)this.followersCount = val.followers.length;
       else this.followersCount = '"Server response error"'
       this.getAllUsersFromNetwork()
     }))
-
   }
 
   async getUserFromNetwork(id: Number): Promise<Observable<user>>{
@@ -225,9 +242,10 @@ export class MainpageComponent implements OnInit {
   }
 
   getAllUsersFromNetwork(){
+    this.allPostings = []
     //get all users
     this.networkingService.getAllUsersFromNetwork().then(observable => observable.subscribe(val => {
-      console.log(val)
+      // console.log(val)
       var recommendetUsers:responseGetPerson[] = val
       
       //get hashtags
@@ -235,13 +253,13 @@ export class MainpageComponent implements OnInit {
 
         for(var i = 0; i<val.length; i++){
 
-          console.log(val[i].id_hashtag)
+          // console.log(val[i].id_hashtag)
           recommendetUsers.push(new responseGetPerson(val[i].id_hashtag,val[i].id_hashtag,[]))
         }
         recommendetUsers = this.shuffleArray(recommendetUsers)
         let forDeletion = [localStorage.getItem("userId")]
         
-        console.log(this.following)
+        // console.log(this.following)
       forDeletion.join(this.following)
       for(let i= 0; i<this.following.length; i++){
         forDeletion.push(this.following[i])
@@ -317,13 +335,33 @@ export class MainpageComponent implements OnInit {
       this.allPostings.sort((n1, n2) => {return new Date(n2.created).getTime() - new Date(n1.created).getTime() });
     }))
 
+    this.getNotifications()
+    
+  }
+
+  getNotifications(){
+    this.notificationService.getNotifications(localStorage.getItem("userId")).then(observable => observable.subscribe(val => this.notifications = val.notifications))
     this.loaded = true
+  }
+
+  deleteAllNotifications(){
+    this.notificationService.removeAllNotifications(localStorage.getItem("userId")).then(observable => observable.subscribe(val => console.log(val)))
+    this.getNotifications()
   }
 
   followUserInNetwork(originID, targetID){   
     this.networkingService.followUserInNetwork(originID, targetID).then(observable => observable.subscribe(val => {
       this.allPostings = [];
-      this.getAllPostings()}))
+      this.getAllPostings()
+    
+      var message:string = localStorage.getItem("vorname") + " " + localStorage.getItem("nachname") + " folgt dir jetzt!"
+      this.notificationService.addNotification(targetID, message).then(observable => observable.subscribe(val => {
+        console.log(val)
+        console.log("notification: " + message)
+      }))
+      
+    }))
+
   }
 
   follow(userid: string, htmlElementid){

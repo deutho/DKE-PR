@@ -9,7 +9,7 @@
 	<meta name="keywords" content="" />
 </head>
 
-<div *ngIf="loaded == true" class="process-comm">
+<div *ngIf="loaded == false" class="process-comm">
 	<div class="spinner">
 		<div class="bounce1"></div>
 		<div class="bounce2"></div>
@@ -104,50 +104,25 @@
 							<li>
 								<a href="javascript:;" title="" class="not-box-open" (click)="showNotifications()">
 									<span><img src="./../../assets/images/icon7.png" alt=""></span>
-									Benachrichtigungen
+									<a *ngIf="notifications.length > 0"><i class="fas fa-circle"></i></a>  Benachrichtigungen
+									
 								</a>
 								<div class="notification-box noti" id="notification">
 									<div class="nt-title">
-										<h4>Setting</h4>
-										<a href="javascript:;" title="">Clear all</a>
+										<h4></h4>
+										<a href="javascript:;" title="" (click)="deleteAllNotifications()">Alle Löschen</a>
 									</div>
-									<div class="nott-list">
-										<div class="notfication-details">
-							  				<div class="noty-user-img">
-							  					<img src="./../../assets/images/resources/ny-img1.png" alt="">
-							  				</div>
+									<div class="nott-list" >
+										<div class="notfication-details" *ngFor="let notification of notifications">
 							  				<div class="notification-info">
-							  					<h3><a href="javascript:;" title="">Jassica William</a> Comment on your project.</h3>
-							  					<span>2 min ago</span>
+							  					<h3>{{notification}}</h3>
 							  				</div><!--notification-info -->
-						  				</div>
-						  				<div class="notfication-details">
-							  				<div class="noty-user-img">
-							  					<img src="./../../assets/images/resources/ny-img2.png" alt="">
-							  				</div>
-							  				<div class="notification-info">
-							  					<h3><a href="javascript:;" title="">Jassica William</a> Comment on your project.</h3>
-							  					<span>2 min ago</span>
-							  				</div><!--notification-info -->
-						  				</div>
-						  				<div class="notfication-details">
-							  				<div class="noty-user-img">
-							  					<img src="./../../assets/images/resources/ny-img3.png" alt="">
-							  				</div>
-							  				<div class="notification-info">
-							  					<h3><a href="javascript:;" title="">Jassica William</a> Comment on your project.</h3>
-							  					<span>2 min ago</span>
-							  				</div><!--notification-info -->
-						  				</div>
-						  				<div class="notfication-details">
-							  				<div class="noty-user-img">
-							  					<img src="./../../assets/images/resources/ny-img2.png" alt="">
-							  				</div>
-							  				<div class="notification-info">
-							  					<h3><a href="javascript:;" title="">Jassica William</a> Comment on your project.</h3>
-							  					<span>2 min ago</span>
-							  				</div><!--notification-info -->
-						  				</div>
+										  </div>
+										<div class="notfication-details" *ngIf="notifications.length == 0">
+											<div class="notification-info">
+												<h3>Keine Benachrichtigungen</h3>
+											</div><!--notification-info -->
+										</div>
 						  				<div class="view-all-nots">
 						  					<a href="javascript:;" title="">View All Notification</a>
 						  				</div>

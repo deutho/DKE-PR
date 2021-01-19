@@ -58,6 +58,10 @@ export class networkingService
         return await this.httpclient.get(apiurl+"subscriptions/"+id);
     }
 
+    async getSubscriptionsOfHashtagsFromNetwork(id): Promise<Observable<any>> {
+        return await this.httpclient.get(apiurl+"subscribedHashtags/"+id);
+    }
+
     async getAllHashtags(): Promise<Observable<any>> {
         return await this.httpclient.get(apiurl+"allHashtags");
     }

@@ -283,8 +283,17 @@ public class PersonController {
             if(transaction.getSubscribedHashtags(id).isEmpty()){
                 return ResponseEntity.ok("{\"subscriptions\": [] }");
             }
+            String returnValue = "[";
+            List message = transaction.getSubscribedHashtags(id);
+            for(int i = 0; i<message.size(); i++){
+                returnValue += "\"";
+                returnValue += message.get(i);
+                returnValue += "\", ";
+            }
+            returnValue = returnValue.substring(0, returnValue.length()-2);
+            returnValue += "]";
             return ResponseEntity.ok("{\"subscriptions\": " +
-                    transaction.getSubscribedHashtags(id).toString() + "}");
+                    returnValue + "}");
         }
         return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
     }
