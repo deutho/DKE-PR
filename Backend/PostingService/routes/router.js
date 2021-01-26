@@ -1,6 +1,9 @@
 var User = require('../model/User');
 var Post = require('../model/Posting')
 const amqp = require('amqplib/callback_api');
+var config = require('./../config')
+const mongoose = require('mongoose');
+
 
 module.exports = function(app, express)
 {
@@ -26,9 +29,30 @@ module.exports = function(app, express)
        
         channel.consume(qeue, function(msg) {
             console.log(" [x] Received %s", msg.content.toString());
-            const qm = msg.content.toString();
-            console.log(qm);
-        
+            const qm = JSON.parse(msg.content.toString());
+            
+            
+            // console.log(posting);
+            // var testJson = JSON.parse(qm) 
+            // console.log(testJson.creator);
+
+            var posting = new Post({
+                creator: qm.creator,
+                emotion: qm.emotion,
+                content: qm.content,
+                hashtags: qm.hashtags,
+                name: qm.name
+            });
+            console.log(posting);
+            posting.save(function(err){
+                if(err){
+                    console.log(err)
+                    return;
+                }   
+            });
+            // var db = mongoose.connection;
+            // db.connection.save(qm)
+
           }, {
               noAck: true
             });

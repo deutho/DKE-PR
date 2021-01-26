@@ -127,7 +127,6 @@ export class MainpageComponent implements OnInit {
         
         var sendableHashtag = hashtags[i].replace("#", "%23")
         this.networkingService.addHashtagToNetwork(sendableHashtag).then(observable => observable.subscribe(val => console.log(val)))
-
       }
 
 
@@ -135,11 +134,30 @@ export class MainpageComponent implements OnInit {
       
       var payload = new posting(localStorage.getItem("userId"), emotion, content, hashtags, name, new Date().toString())
       console.log(payload)
-      this.postingService.postPosting(payload).then(observable => observable.subscribe(val => {      
-        this.removeOverlay()
-        this.allPostings = []
-        this.getAllPostings()
-      }))
+      // this.postingService.postPosting(payload).then(observable => observable.subscribe(val => {      
+      //   this.removeOverlay()
+      //   this.allPostings = []
+      //   this.getAllPostings()
+      // }))
+
+
+      //RabbitMQ
+      var username = "guest"; 
+      var password = "guest";      
+      var xhttp = new XMLHttpRequest();
+      
+      var fullurl = "http://localhost:15672/api/exchanges/%2f/amq.default/publish";    
+      xhttp.open("POST", fullurl, true,username,password);  
+      xhttp.setRequestHeader("Content-Type","application/jsonp");
+
+
+      var params = JSON.stringify({"properties":{},
+      "routing_key":"postings",
+      "payload":JSON.stringify(payload),
+      "payload_encoding":"string"});
+      
+
+      xhttp.send(params);
     }
   }
 
