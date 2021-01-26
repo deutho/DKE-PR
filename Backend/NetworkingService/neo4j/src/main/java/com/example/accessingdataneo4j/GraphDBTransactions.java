@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.neo4j.driver.*;
+import org.neo4j.driver.Record;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class GraphDBTransactions implements AutoCloseable{
         String jsonStr = json.toString();
         JSONObject obj = new JSONObject(jsonStr);
         JSONArray arr = obj.getJSONArray("createPerson");
-        
+
         int id = -1;
         String name = "";
         for (int i = 0; i < arr.length(); i++) {
@@ -50,7 +51,7 @@ public class GraphDBTransactions implements AutoCloseable{
                                     "SET a.id = $id, a.name = $name " +
                                     "RETURN a.id, a.name + ', from node ' + id(a)",
                             parameters( "name", finalName, "id", finalId) );
-                    return (new Person(finalId, finalName, null));
+                    return (new Person(finalId, finalName, null, null));
                 }
             });
         }
@@ -72,12 +73,63 @@ public class GraphDBTransactions implements AutoCloseable{
                                     "SET a.id = $id, a.name = $name " +
                                     "RETURN a.id, a.name + ', from node ' + id(a)",
                             parameters( "name", name , "id", id) );
-                    return (new Person(id, name, null));
+                    return (new Person(id, name, null, null));
                 }
             });
         }
         return p;
     }
+
+    // CREATE a new hashtag by json input
+    public Hashtag createHashtag(JsonNode json) throws JSONException {
+        String jsonStr = json.toString();
+        JSONObject obj = new JSONObject(jsonStr);
+        JSONArray arr = obj.getJSONArray("createHashtag");
+
+        String id = "";
+        for (int i = 0; i < arr.length(); i++) {
+            id = arr.getJSONObject(i).getString("id");
+        }
+        Hashtag h;
+        try ( Session session = driver.session() )
+        {
+            String finalId = id;
+            h = session.writeTransaction(new TransactionWork<Hashtag>()
+            {
+                @Override
+                public Hashtag execute( Transaction tx )
+                {
+                    Result result = tx.run( "CREATE (a:Hashtag) " +
+                                    "SET a.id = $id",
+                            parameters( "id", finalId) );
+                    return (new Hashtag(finalId));
+                }
+            });
+        }
+        return h;
+    }
+
+    //create a new hashtag by string id input
+    public Hashtag createHashtag(String id)
+    {
+        Hashtag p;
+        try ( Session session = driver.session() )
+        {
+            p = session.writeTransaction( new TransactionWork<Hashtag>()
+            {
+                @Override
+                public Hashtag execute( Transaction tx )
+                {
+                    Result result = tx.run( "CREATE (a:Hashtag) " +
+                                    "SET a.id = $id",
+                            parameters( "id", id) );
+                    return (new Hashtag(id));
+                }
+            });
+        }
+        return p;
+    }
+
 
     //FOLLOW TRANSACTIONS
     //=================================================================================================
@@ -113,7 +165,7 @@ public class GraphDBTransactions implements AutoCloseable{
     }
 
     // FOLLOWING by their IDs as input
-    public void follow(int id1, int id2)
+    public void followPerson(int id1, int id2)
     {
         try ( Session session = driver.session() )
         {
@@ -122,16 +174,37 @@ public class GraphDBTransactions implements AutoCloseable{
                 @Override
                 public String execute( Transaction tx )
                 {
-                    Result result = tx.run( "MATCH (a:Person {id: $id1}) " +
-                                    "MATCH (b:Person {id: $id2}) " +
+                    Result result = tx.run( "MATCH (a:Person {id: $id_from}) " +
+                                    "MATCH (b:Person {id: $id_to}) " +
                                     "MERGE (a)-[:FOLLOWS]->(b)",
-                            parameters( "id1", id1, "id2", id2 ) );
+                            parameters( "id_from", id1, "id_to", id2) );
                     return "ok";
                 }
             } );
-            System.out.println(id1 + " follows " + id2);
         }
     }
+
+
+    public void followHashtag(int id1, String id2)
+    {
+        try ( Session session = driver.session() )
+        {
+            String person = session.writeTransaction( new TransactionWork<String>()
+            {
+                @Override
+                public String execute( Transaction tx )
+                {
+                    Result result = tx.run( "MATCH (a:Person {id: $id_from}) " +
+                                    "MATCH (b:Hashtag {id: $id_to}) " +
+                                    "MERGE (a)-[:FOLLOWS]->(b)",
+                            parameters( "id_from", id1, "id_to", id2) );
+                    return "ok";
+                }
+            } );
+        }
+    }
+
+
 
     // UNFOLLOWING by json input
     public void unfollow(JsonNode json) throws JSONException {
@@ -164,8 +237,8 @@ public class GraphDBTransactions implements AutoCloseable{
         }
     }
 
-    // UNFOLLOWING by IDs as input
-    public void unfollow(int id1, int id2)
+    // UNFOLLOWING a person by IDs as input
+    public void unfollowPerson(int id1, int id2)
     {
         try ( Session session = driver.session() )
         {
@@ -183,6 +256,25 @@ public class GraphDBTransactions implements AutoCloseable{
         }
     }
 
+    // UNFOLLOWING a hashtag by IDs as input
+    public void unfollowHashtag(int id1, String id2)
+    {
+        try ( Session session = driver.session() )
+        {
+            String person = session.writeTransaction( new TransactionWork<String>()
+            {
+                @Override
+                public String execute( Transaction tx )
+                {
+                    Result result = tx.run( "MATCH (a:Person {id: $id1})-[f:FOLLOWS]-(b:Hashtag {id: $id2})" +
+                                    "DELETE f",
+                            parameters( "id1", id1, "id2", id2 ) );
+                    return "ok";
+                }
+            } );
+        }
+    }
+
     //READ TRANSACTIONS
     //======================================================================================================
     //GET all persons of database
@@ -190,29 +282,84 @@ public class GraphDBTransactions implements AutoCloseable{
         Session session = driver.session();
         List<Person> allPersons = new ArrayList<>();
         allPersons = session.readTransaction(new TransactionWork<List<Person>>(){
-                @Override
-                public List<Person> execute(Transaction tx)
-                {
-                    List<Person> persons = new ArrayList<Person>();
-                    Result result = tx.run(  "MATCH (p:Person)" +
-                                                    "OPTIONAL MATCH (p)-[r:FOLLOWS]->(p2:Person)" +
-                                                    "RETURN p.id, p.name, collect(p2.id) as follows");
-                        while (result.hasNext()){
-                            Record r = result.next();
-                            int id = r.get("p.id").asInt();
-                            String name = r.get("p.name").asString();
-                            List follows = r.get("follows").asList();
-                            ArrayList<String> followsPerson = new ArrayList<>();
+            @Override
+            public List<Person> execute(Transaction tx)
+            {
+                List<Person> persons = new ArrayList<>();
+                Result result = tx.run(  "MATCH (p:Person) " +
+                        "OPTIONAL MATCH (p)-[r:FOLLOWS]->(p2:Person) " +
+                        "OPTIONAL MATCH (p)-[f:FOLLOWS]->(h:Hashtag) " +
+                        "RETURN p.id, p.name, collect(p2.id) as persons, collect(h.id) as hashtags");
+                while (result.hasNext()){
+                    Record r = result.next();
+                    int id = r.get("p.id").asInt();
+                    String name = r.get("p.name").asString();
+                    List followsPersons = r.get("persons").asList();
 
-                            for(Object f : follows){
-                                followsPerson.add(follows.toString());
-                            }
-                            persons.add(new Person(id, name, follows));
-                         }
-                        return persons;
-                 }
+                    ArrayList<String> followsP = new ArrayList<>();
+                    List<String> followsH = getAllHashtagsOfAPerson(id);
+
+                    for(Object f : followsPersons){
+                        followsP.add(followsPersons.toString());
+                    }
+
+                    persons.add(new Person(id, name, followsP, followsH));
+                }
+                return persons;
+            }
         });
         return allPersons;
+    }
+
+    public List<Hashtag> getAllHashtags(){
+        Session session = driver.session();
+        List<Hashtag> hashtag;
+        hashtag = session.readTransaction(new TransactionWork<List<Hashtag>>(){
+            @Override
+            public List<Hashtag> execute(Transaction tx)
+            {
+                List<Hashtag> hashtags = new ArrayList<Hashtag>();
+                Result result = tx.run(  "MATCH (p:Hashtag)" +
+                        "RETURN p.id" );
+                while (result.hasNext()){
+                    Record r = result.next();
+                    String id = r.get("p.id").asString();
+                    hashtags.add(new Hashtag(id));
+                }
+                return hashtags;
+            }
+        });
+        return hashtag;
+    }
+
+    public List<String> getAllHashtagsOfAPerson(int id){
+        Session session = driver.session();
+        List<String> allHashtags = new ArrayList<>();
+        allHashtags = session.readTransaction(new TransactionWork<List<String>>(){
+            @Override
+            public List<String> execute(Transaction tx)
+            {
+                List<String> hashtags = new ArrayList<>();
+                Result result = tx.run( "MATCH (p:Person { id: $id }) " +
+                        "OPTIONAL MATCH (p)-[r:FOLLOWS]->(h:Hashtag) " +
+                        "RETURN  collect(h.id) as hashtags" ,
+                parameters( "id", id));
+                while (result.hasNext()){
+                    Record r = result.next();
+                    List followsHashtags = r.get("hashtags").asList();
+                    System.out.println(followsHashtags.toString());
+
+                    ArrayList<String> followsH = new ArrayList<>();
+
+                    for(Object h : followsHashtags){
+                        followsH.add(followsHashtags.toString());
+                    }
+                    hashtags = followsH;
+                }
+                return hashtags;
+            }
+        });
+        return allHashtags;
     }
 
     //GET a person by id
@@ -224,9 +371,9 @@ public class GraphDBTransactions implements AutoCloseable{
             public Person execute(Transaction tx)
             {
                 Result result = tx.run(  "MATCH (p:Person { id: $id })" +
-                        "OPTIONAL MATCH (p)-[r:FOLLOWS]->(p2:Person)" +
-                        "RETURN p.id, p.name, collect(p2.id) as follows",
-                parameters( "id", id));
+                                "OPTIONAL MATCH (p)-[r:FOLLOWS]->(p2:Person)" +
+                                "RETURN p.id, p.name, collect(p2.id) as follows",
+                        parameters( "id", id));
 
                 Record r = result.next();
                 int id;
@@ -246,7 +393,7 @@ public class GraphDBTransactions implements AutoCloseable{
                         followsPerson.add(follows.toString());
                     }
                 }
-                return (new Person(id, name, follows));
+                return (new Person(id, name, follows, null));
             }
         });
         return personById;
@@ -266,11 +413,11 @@ public class GraphDBTransactions implements AutoCloseable{
                         parameters( "id", id));
 
                 boolean exist;
-               if(!result.hasNext()){
-                   exist = false;
-               }else{
-                   exist = true;
-               }
+                if(!result.hasNext()){
+                    exist = false;
+                }else{
+                    exist = true;
+                }
                 return exist;
             }
         });
@@ -278,17 +425,15 @@ public class GraphDBTransactions implements AutoCloseable{
     }
 
     //GET true/false if person exists in database
-    public boolean hashtagExists(String name){
+    public boolean hashtagExists(String id){
         Session session = driver.session();
         boolean exist;
         exist = session.readTransaction(new TransactionWork<Boolean>(){
             @Override
             public Boolean execute(Transaction tx)
             {
-                Result result = tx.run(  "MATCH (p:Person { name: $name })" +
-                                "OPTIONAL MATCH (p)-[r:FOLLOWS]->(p2:Person)" +
-                                "RETURN p.id, p.name, collect(p2.id) as follows",
-                        parameters( "name", name));
+                Result result = tx.run(  "MATCH (p:Hashtag { id: $id }) RETURN p.id",
+                        parameters( "id", id));
 
                 boolean exist;
                 if(!result.hasNext()){
@@ -335,13 +480,36 @@ public class GraphDBTransactions implements AutoCloseable{
             {
                 ArrayList<String> followsPerson = new ArrayList<>();
                 Result result = tx.run(  "MATCH (p:Person { id: $id })" +
-                        "OPTIONAL MATCH (p)-[r:FOLLOWS]->(p2:Person)" +
-                        "RETURN p.id, p.name, collect(p2.id) as follows",
+                                "OPTIONAL MATCH (p)-[r:FOLLOWS]->(p2:Person)" +
+                                "RETURN p.id, p.name, collect(p2.id) as follows",
                         parameters("id", id));
                 List follows = null;
                 while (result.hasNext()){
                     Record r = result.next();
-                     follows = r.get("follows").asList();
+                    follows = r.get("follows").asList();
+                }
+                return follows;
+            }
+        });
+        return allPersons;
+    }
+
+    public List<String> getSubscribedHashtags(int id){
+        Session session = driver.session();
+        List<String> allPersons;
+        allPersons = session.readTransaction(new TransactionWork<List<String>>(){
+            @Override
+            public List<String> execute(Transaction tx)
+            {
+                ArrayList<String> followsPerson = new ArrayList<>();
+                Result result = tx.run(  "MATCH (p:Person { id: $id })" +
+                                "OPTIONAL MATCH (p)-[r:FOLLOWS]->(h:Hashtag)" +
+                                "RETURN p.id, p.name, collect(h.id) as follows",
+                        parameters("id", id));
+                List follows = null;
+                while (result.hasNext()){
+                    Record r = result.next();
+                    follows = r.get("follows").asList();
                 }
                 return follows;
             }
@@ -360,8 +528,8 @@ public class GraphDBTransactions implements AutoCloseable{
             {
                 ArrayList<String> followsPerson = new ArrayList<>();
                 Result result = tx.run(  "MATCH (p:Person { id: $id }) " +
-                                                "OPTIONAL MATCH (p2)-[r:FOLLOWS]->(p:Person) " +
-                                                "RETURN collect(p2.id) as follows",
+                                "OPTIONAL MATCH (p2)-[r:FOLLOWS]->(p:Person) " +
+                                "RETURN collect(p2.id) as follows",
                         parameters("id", id));
                 List follows = null;
                 while (result.hasNext()){
@@ -380,13 +548,13 @@ public class GraphDBTransactions implements AutoCloseable{
     public Person update(JsonNode json) throws JSONException {
         String jsonStr = json.toString();
         JSONObject obj = new JSONObject(jsonStr);
-        JSONArray arr = obj.getJSONArray("update person");
+        JSONArray arr = obj.getJSONArray("updatePerson");
 
         int id = -1;
         String name_post = "";
         for (int i = 0; i < arr.length(); i++) {
             id = arr.getJSONObject(i).getInt("id");
-            name_post = arr.getJSONObject(i).getString("name_post");
+            name_post = arr.getJSONObject(i).getString("new_name");
         }
         Person p = null;
         //check if person already exists in database
@@ -398,10 +566,10 @@ public class GraphDBTransactions implements AutoCloseable{
                     @Override
                     public Person execute(Transaction tx) {
                         Result result = tx.run("MATCH (p:Person {id: $id }) " +
-                                                      "SET p.name = $name_post " +
-                                                      "RETURN p",
-                                parameters("id", finalId, "name_post", finalName));
-                        return (new Person(finalId, finalName, getSubscriptions(finalId)));
+                                        "SET p.name = $new_name " +
+                                        "RETURN p",
+                                parameters("id", finalId, "new_name", finalName));
+                        return (new Person(finalId, finalName, getSubscriptions(finalId), null));
                     }
                 });
             }
@@ -419,10 +587,10 @@ public class GraphDBTransactions implements AutoCloseable{
                     @Override
                     public Person execute(Transaction tx) {
                         Result result = tx.run("MATCH (p:Person {id: $id }) " +
-                                                      "SET p.name = $name_post " +
-                                                      "RETURN p",
+                                        "SET p.name = $name_post " +
+                                        "RETURN p",
                                 parameters("id", id, "name_post", name_post));
-                        return (new Person(id, name_post, getSubscriptions(id)));
+                        return (new Person(id, name_post, getSubscriptions(id), null));
                     }
                 });
             }
@@ -576,9 +744,24 @@ public class GraphDBTransactions implements AutoCloseable{
         return hashtagName;
     }
 
+    public String getHashtagId(JsonNode json) throws JSONException {
+        String jsonStr = json.toString();
+        JSONObject obj = new JSONObject(jsonStr);
+        String id = "";
+
+        if(jsonStr.contains("createHashtag")){
+            JSONArray arr = obj.getJSONArray("createHashtag");
+            for (int j = 0; j < arr.length(); j++) {
+                id = arr.getJSONObject(j).getString("id");
+            }
+        }
+        return id;
+    }
+
+
     public boolean isHashtag(JsonNode json){
         String jsonStr = json.toString();
-        if(jsonStr.contains("#")) return  true;
+        if(jsonStr.contains("#")) return true;
         return false;
     }
 }

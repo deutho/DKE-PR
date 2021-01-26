@@ -26,18 +26,18 @@ public class RunTestData {
             person.create(10, "Lisa");
 
             //TEST RELATIONSHIPS
-            person.follow(1, 2);
-            person.follow(2, 3);
-            person.follow(3, 2);
-            person.follow(10,3);
-            person.follow(10,2);
-            person.follow(10,7);
-            person.follow(8, 1);
-            person.follow(6, 7);
-            person.follow(4, 7);
-            person.follow(3, 9);
-            person.follow(3, 6);
-            person.follow(4, 3);
+//            person.follow(1, 2);
+//            person.follow(2, 3);
+//            person.follow(3, 2);
+//            person.follow(10,3);
+//            person.follow(10,2);
+//            person.follow(10,7);
+//            person.follow(8, 1);
+//            person.follow(6, 7);
+//            person.follow(4, 7);
+//            person.follow(3, 9);
+//            person.follow(3, 6);
+//            person.follow(4, 3);
 //
 //            //TEST DELETE
 //            person.delete(5);

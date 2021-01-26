@@ -10,6 +10,7 @@ import { userService } from './services/userService';
 import { ProfilepageComponent } from './profilepage/profilepage.component';
 import { SettingspageComponent } from './settingspage/settingspage.component';
 import { FriendspageComponent } from './friendspage/friendspage.component';
+import { ProfilesettingsComponent } from './profilesettings/profilesettings.component';
 
 
 
@@ -21,7 +22,8 @@ import { FriendspageComponent } from './friendspage/friendspage.component';
     RegistrationpageComponent,
     ProfilepageComponent,
     SettingspageComponent,
-    FriendspageComponent
+    FriendspageComponent,
+    ProfilesettingsComponent
   ],
   imports: [
     BrowserModule,

@@ -11,7 +11,16 @@
 </head>
 
 
-<body>
+<div *ngIf="loaded == false" class="process-comm">
+	<div class="spinner">
+		<div class="bounce1"></div>
+		<div class="bounce2"></div>
+		<div class="bounce3"></div>
+	</div>
+</div>
+
+
+<body *ngIf="loaded == true">
 	<div *ngIf="overlayIsActive" id="superoverlay" class="superoverlay" (click)="removeAllOverlays()"></div>
 
 	<div class="wrapper">
@@ -152,7 +161,7 @@
 					<div class="user-account" >
 						<div class="user-info" (click)="openUserDropDown()">
 							<!-- <img src="./../../assets/images/resources/user.png" alt=""> -->
-							<a href="javascript:;" title="" style="padding-left: 15px; font-size: 20px;">John</a>
+							<a href="javascript:;" title="" style="padding-left: 15px; font-size: 20px;">{{userNameDropdown}}</a>
 							<i class="la la-sort-down" style="padding-top: 5px;"></i>
 						</div>
 						<div class="user-account-settingss" id="users" style="margin-top: 10px;">
@@ -180,8 +189,8 @@
 							<h3>Custom Status</h3>
 							<div class="search_form">
 								<form>
-									<input type="text" name="search">
-									<button type="submit">Ok</button>
+									<input type="text" name="search" id="statusValueHTMLElement">
+									<button type="button" (click)="setStatus()">Ok</button>
 								</form>
 							</div><!--search_form end-->
 							<h3>Setting</h3>
@@ -207,29 +216,23 @@
 				</div><!--company-title end-->
 				<div class="companies-list">
 					<div class="row">
-						<div class="col-lg-3 col-md-4 col-sm-6 col-12">
+
+						<div class="col-lg-3 col-md-4 col-sm-6 col-12" *ngFor="let sub of subs">
 							<div class="company_profile_info">
 								<div class="company-up-info">
-									<img src="./../../assets/images/happy.png" alt="">
-									<h3>John Doe</h3>
-									<h4>Graphic Designer</h4>
+									<img src='{{"./../../assets/images/" + sub.emotion + ".png"}}' alt="">
+									<h3>{{sub.name}}</h3>
+									<h4>{{sub.status}}</h4>
 									<ul>
-										<li><a title="" class="follow" style="color: white; cursor: pointer;">Entfolgen</a></li>
+										<li><a title="" class="follow" style="color: white; cursor: pointer;" (click)="unfollow(sub.userId)">Entfolgen</a></li>
 									</ul>
 								</div>
-								<a routerLink="/profilepage" href="javascript:;" title="" class="view-more-pro">Profilseite ansehen</a>
+								<a href="javascript:;" title="" class="view-more-pro" (click)="setProfilePageID(sub.userId)" routerLink="/profilepage">Profilseite ansehen</a>
 							</div><!--company_profile_info end-->
 						</div>
+						
 					</div>
-				</div><!--companies-list end-->
-				<!-- <div class="process-comm">
-					<div class="spinner">
-						<div class="bounce1"></div>
-						<div class="bounce2"></div>
-						<div class="bounce3"></div>
-					</div>
-                </div> -->
-                <!--process-comm end-->
+				</div>
 			</div>
 		</section><!--companies-info end-->
 		<footer>

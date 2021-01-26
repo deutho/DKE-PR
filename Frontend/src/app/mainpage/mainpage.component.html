@@ -17,17 +17,17 @@
 	</div>
 </div>
 
-<body *ngIf="loaded == true">	
+<body>
 
-	<!-- <button (click)="addUserToNetwork('3','Barbara3')">Add Barbara to Neo4J</button>
-	<button (click)="addUserToNetwork('4','Alfred4')">Add Alfred to Neo4J</button> -->
+	<!--  <button (click)="addUserToNetwork('3','Barbara3')">Add Barbara to Neo4J</button> -->
+	<!-- <button (click)="addUserToNetwork('1','Alfred1')">Add Alfred to Neo4J</button> -->
 	<!-- <button (click)="deleteUserFromNetwork()">Delete User From Neo4J</button> -->
 	<!-- <button (click)="getUserFromNetwork(13)">Get User From Neo4J</button> -->
 	<!-- <button (click)="getAllUsersFromNetwork()">Get All User From Neo4J</button> -->
-	<!-- <button (click)="followUserInNetwork(24,2)">Follow User In Neo4J</button> -->
-	<button (click)="getPostingsOfUser(1)">Get all Postings of current user</button>
+	<!-- <button (click)="followUserInNetwork(23,1)">Follow User In Neo4J</button> -->
+	<!-- <button (click)="getPostingsOfUser(1)">Get all Postings of current user</button> -->
 	<div *ngIf="overlayIsActive" id="superoverlay" class="superoverlay" (click)="removeAllOverlays()"></div>
-	<div id="wrapper" class="wrapper">	
+	<div id="wrapper" class="wrapper">
 		<header>
 			<div class="container">
 				<div class="header-data">
@@ -47,14 +47,14 @@
 						<ul>
 							<li>
 								<a  routerLink="" title="">
-									Home									
+									Home
 								</a>
 							</li>
 							<li>
 								<a routerLink="/friends" style="text-align: left;" title="" >
 									Abonniert
 								</a>
-							</li>							
+							</li>
 							<li>
 								<a href="javascript:;" title="" class="not-box-openm">
 									Chat
@@ -104,50 +104,25 @@
 							<li>
 								<a href="javascript:;" title="" class="not-box-open" (click)="showNotifications()">
 									<span><img src="./../../assets/images/icon7.png" alt=""></span>
-									Benachrichtigungen
+									<a *ngIf="notifications.length > 0"><i class="fas fa-circle"></i></a>  Benachrichtigungen
+									
 								</a>
 								<div class="notification-box noti" id="notification">
 									<div class="nt-title">
-										<h4>Setting</h4>
-										<a href="javascript:;" title="">Clear all</a>
+										<h4></h4>
+										<a href="javascript:;" title="" (click)="deleteAllNotifications()">Alle Löschen</a>
 									</div>
-									<div class="nott-list">
-										<div class="notfication-details">
-							  				<div class="noty-user-img">
-							  					<img src="./../../assets/images/resources/ny-img1.png" alt="">
-							  				</div>
+									<div class="nott-list" >
+										<div class="notfication-details" *ngFor="let notification of notifications">
 							  				<div class="notification-info">
-							  					<h3><a href="javascript:;" title="">Jassica William</a> Comment on your project.</h3>
-							  					<span>2 min ago</span>
+							  					<h3>{{notification}}</h3>
 							  				</div><!--notification-info -->
-						  				</div>
-						  				<div class="notfication-details">
-							  				<div class="noty-user-img">
-							  					<img src="./../../assets/images/resources/ny-img2.png" alt="">
-							  				</div>
-							  				<div class="notification-info">
-							  					<h3><a href="javascript:;" title="">Jassica William</a> Comment on your project.</h3>
-							  					<span>2 min ago</span>
-							  				</div><!--notification-info -->
-						  				</div>
-						  				<div class="notfication-details">
-							  				<div class="noty-user-img">
-							  					<img src="./../../assets/images/resources/ny-img3.png" alt="">
-							  				</div>
-							  				<div class="notification-info">
-							  					<h3><a href="javascript:;" title="">Jassica William</a> Comment on your project.</h3>
-							  					<span>2 min ago</span>
-							  				</div><!--notification-info -->
-						  				</div>
-						  				<div class="notfication-details">
-							  				<div class="noty-user-img">
-							  					<img src="./../../assets/images/resources/ny-img2.png" alt="">
-							  				</div>
-							  				<div class="notification-info">
-							  					<h3><a href="javascript:;" title="">Jassica William</a> Comment on your project.</h3>
-							  					<span>2 min ago</span>
-							  				</div><!--notification-info -->
-						  				</div>
+										  </div>
+										<div class="notfication-details" *ngIf="notifications.length == 0">
+											<div class="notification-info">
+												<h3>Keine Benachrichtigungen</h3>
+											</div><!--notification-info -->
+										</div>
 						  				<div class="view-all-nots">
 						  					<a href="javascript:;" title="">View All Notification</a>
 						  				</div>
@@ -162,7 +137,7 @@
 					<div class="user-account" >
 						<div class="user-info" (click)="openUserDropDown()">
 							<!-- <img src="./../../assets/images/resources/user.png" alt=""> -->
-							<a href="javascript:;" title="" style="padding-left: 15px; font-size: 20px;">John</a>
+							<a href="javascript:;" title="" style="padding-left: 15px; font-size: 20px;">{{userNameDropdown}}</a>
 							<i class="la la-sort-down" style="padding-top: 5px;"></i>
 						</div>
 						<div class="user-account-settingss" id="users" style="margin-top: 10px;">
@@ -190,13 +165,13 @@
 							<h3>Custom Status</h3>
 							<div class="search_form">
 								<form>
-									<input type="text" name="search">
-									<button type="submit">Ok</button>
+									<input type="text" name="search" id="statusValueHTMLElement">
+									<button type="button" (click)="setStatus()">Ok</button>
 								</form>
 							</div><!--search_form end-->
 							<h3>Setting</h3>
 							<ul class="us-links">
-								<li><a href="profile-account-setting.html" title="">Account Setting</a></li>
+								<li><a href="javascript:;" title="" routerLink="/profilesettings">Account Setting</a></li>
 								<li><a href="javascript:;" title="">Privacy</a></li>
 								<li><a href="javascript:;" title="">Faqs</a></li>
 								<li><a href="javascript:;" title="">Terms & Conditions</a></li>
@@ -206,7 +181,7 @@
 					</div>
 				</div><!--header-data end-->
 			</div>
-		</header><!--header end-->	
+		</header><!--header end-->
 
 		<main>
 			<div class="main-section">
@@ -219,10 +194,10 @@
 										<div class="user-profile">
                                             <div class="username-dt">
 												<div class="usr-pic">
-													<img src="./../../assets/images/angry.png" alt="">
+													<img src='{{"./../../assets/images/" + userMood + ".png"}}' alt="">
 												</div>
 											</div><!--username-dt end-->
-                                            
+
 											<div class="user-specs">
 												<h3>{{vorname}} {{nachname}}</h3>
 												<span>{{status}}</span>
@@ -231,17 +206,17 @@
 										<ul class="user-fw-status">
 											<li>
 												<h4>Du folgst</h4>
-												<span>{{following}}</span>
+												<span>{{followingCount}}</span>
 											</li>
 											<li>
 												<h4>Du wirst gefolgt von</h4>
-												<span>155</span>
+												<span>{{followersCount}}</span>
 											</li>
 											<li>
-												<a routerLink="/profilepage" title="">Profilseite ansehen</a>
+												<a  title="" (click)="setProfilePageID('local')" routerLink="/profilepage">Profilseite ansehen</a>
 											</li>
 										</ul>
-									</div><!--user-data end-->									
+									</div><!--user-data end-->
 									<div class="tags-sec full-width">
 										<ul>
 											<li><a href="javascript:;" title="">Hilfe Center</a></li>
@@ -254,7 +229,7 @@
 											<li><a href="javascript:;" title="">Copyright</a></li>
 										</ul>
 										<div class="cp-sec">
-											
+
 											<p><img src="./../../assets/images/cp.png" alt="">Copyright 2021</p>
 										</div>
 									</div><!--tags-sec end-->
@@ -268,19 +243,19 @@
 											<h3>Mir geht es...</h3>
 										</label>
 										<div id="postButton" class="post-st">
-											<ul>												
+											<ul>
 												<li><a class="post-jb active" href="javascript:;" title="" (click)="newPost()">Poste deine Stimmung</a></li>
 											</ul>
 										</div><!--post-st end-->
 									</div><!--post-topbar end-->
 									<div class="posts-section">
-										<div class="post-bar">
+										<div class="post-bar" *ngFor="let post of allPostings">
 											<div class="post_topbar">
 												<div class="usy-dt">
-													<img class="small-profile-mood" src="./../../assets/images/happy.png" alt="">
-													<div class="usy-name">
-														<h3>John Doe</h3>
-														<span><img src="./../../assets/images/clock.png" alt="">3 min ago</span>
+													<img class="small-profile-mood" src='{{"./../../assets/images/" + post.emotion + ".png"}}' alt="">
+													<div class="usy-name" >
+														<h3 style="cursor: pointer;" (click)="setProfilePageID(post.creator)" routerLink="/profilepage">{{post.name}}</h3>
+														<span><img src="./../../assets/images/clock.png" alt="">{{dateFormatter(post.created)}}</span>
 													</div>
 												</div>
 												<div class="ed-opts">
@@ -295,13 +270,10 @@
 												</div>
 											</div>
 											<div class="job_descp">
-												<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam luctus hendrerit metus, ut ullamcorper quam finibus at. Etiam id magna sit amet...</p>
-												<ul class="skill-tags">
-													<li><a href="javascript:;" title="">HTML</a></li>
-													<li><a href="javascript:;" title="">PHP</a></li>
-													<li><a href="javascript:;" title="">CSS</a></li>
-													<li><a href="javascript:;" title="">Javascript</a></li>
-													<li><a href="javascript:;" title="">Wordpress</a></li> 	
+												<div style="height: 15px;"></div>
+												<p>{{post.content}}</p>
+												<ul class="skill-tags" *ngIf="post.hashtags.length == 1 && post.hashtags[0] !== ''" style="margin-bottom: -10px;">
+													<li *ngFor="let hashtag of post.hashtags"><a href="javascript:;" title="">{{hashtag}}</a></li>
 												</ul>
 											</div>
 											<!-- <div class="job-status-bar">
@@ -311,13 +283,13 @@
 														<img src="./../../assets/images/liked-img.png" alt="">
                                                         <span>25</span>
                                                         <span style="background-color: transparent;"></span>
-													</li> 
+													</li>
 													<li><a href="javascript:;" class="com"><i class="fas fa-comment-alt"></i> Kommentare 15</a></li>
 												</ul>
 												<a href="javascript:;"><i class="fas fa-eye"></i>Gesehen 50</a>
 											</div> -->
 										</div><!--post-bar end-->
-										
+
 
 										<!-- <div class="process-comm">
 											<div class="spinner">
@@ -331,61 +303,61 @@
 								</div><!--main-ws-sec end-->
 							</div>
 							<div class="col-lg-3 pd-right-none no-pd">
-								<div class="right-sidebar">																	
+								<div class="right-sidebar">
 									<div class="widget suggestions full-width">
                                         <div style="border-top: 4px solid #e44d3a;"></div>
-										<div class="sd-title">                                            
+										<div class="sd-title">
 											<h3>Personen, welche du vielleicht kennst</h3>
 											<i class="la la-ellipsis-v"></i>
 										</div><!--sd-title end-->
 										<div class="suggestions-list">
-											<div class="suggestion-usd">
-												<img class="small-profile-mood" src="./../../assets/images/happy.png" alt="">
+											<div class="suggestion-usd"  *ngIf="recommendedUser1.name !== '' && showRec1 == true">
+												<img class="small-profile-mood" src='{{"./../../assets/images/" + recommendedUser1Emotion + ".png"}}' alt="">
 												<div class="sgt-text">
-													<h4>{{recommendedUser1.name}}</h4>
+													<h4 style="cursor: pointer;" (click)="setProfilePageID(recommendedUser1.id_person)" routerLink="/profilepage">{{recommendedUser1.name}}</h4>
 													<span>{{recommendedUser1Status}}</span>
 												</div>
-												<span><i class="la la-plus" (click)="follow(recommendedUser1.id_person)"></i></span>
+												<span><i class="la la-plus" (click)="follow(recommendedUser1.id_person, 1)"></i></span>
 											</div>
-											<div class="suggestion-usd">
-												<img class="small-profile-mood" src="./../../assets/images/sad.png" alt="">
+											<div class="suggestion-usd"  *ngIf="recommendedUser2.name !== ''  && showRec2 == true">
+												<img class="small-profile-mood" src='{{"./../../assets/images/" + recommendedUser2Emotion + ".png"}}' alt="">
 												<div class="sgt-text">
-													<h4>{{recommendedUser2.name}}</h4>
+													<h4 style="cursor: pointer;"  (click)="setProfilePageID(recommendedUser2.id_person)" routerLink="/profilepage">{{recommendedUser2.name}}</h4>
 													<span>{{recommendedUser2Status}}</span>
 												</div>
-												<span><i class="la la-plus" (click)="follow(recommendedUser2.id_person)"></i></span>
+												<span><i class="la la-plus" (click)="follow(recommendedUser2.id_person, 2)"></i></span>
 											</div>
-											<div class="suggestion-usd">
-												<img class="small-profile-mood" src="./../../assets/images/angry.png" alt="">
+											<div class="suggestion-usd"  *ngIf="recommendedUser3.name !== ''  && showRec3 == true">
+												<img class="small-profile-mood" src='{{"./../../assets/images/" + recommendedUser3Emotion + ".png"}}' alt="">
 												<div class="sgt-text">
-													<h4>{{recommendedUser3.name}}</h4>
+													<h4 style="cursor: pointer;"  (click)="setProfilePageID(recommendedUser3.id_person)" routerLink="/profilepage">{{recommendedUser3.name}}</h4>
 													<span>{{recommendedUser3Status}}</span>
 												</div>
-												<span><i class="la la-plus" (click)="follow(recommendedUser3.id_person)"></i></span>
+												<span><i class="la la-plus" (click)="follow(recommendedUser3.id_person, 3)"></i></span>
 											</div>
-											<div class="suggestion-usd">
-												<img class="small-profile-mood" src="./../../assets/images/hashtag.png" alt="">
+											<div class="suggestion-usd"  *ngIf="recommendedUser4.name !== ''  && showRec4 == true">
+												<img class="small-profile-mood" src='{{"./../../assets/images/" + recommendedUser4Emotion + ".png"}}' alt="">
 												<div class="sgt-text">
-													<h4>{{recommendedUser4.name}}</h4>
+													<h4 style="cursor: pointer;"  (click)="setProfilePageID(recommendedUser4.id_person)" routerLink="/profilepage">{{recommendedUser4.name}}</h4>
 													<span>{{recommendedUser4Status}}</span>
 												</div>
-												<span><i class="la la-plus" (click)="follow(recommendedUser4.id_person)"></i></span>
+												<span><i class="la la-plus" (click)="follow(recommendedUser4.id_person, 4)"></i></span>
 											</div>
-											<div class="suggestion-usd">
-												<img class="small-profile-mood" src="./../../assets/images/angry.png" alt="">
+											<div class="suggestion-usd" *ngIf="recommendedUser5.name !== ''  && showRec5 == true">
+												<img class="small-profile-mood" src='{{"./../../assets/images/" + recommendedUser5Emotion + ".png"}}' alt="">
 												<div class="sgt-text">
-													<h4>{{recommendedUser5.name}}</h4>
+													<h4 style="cursor: pointer;"  (click)="setProfilePageID(recommendedUser5.id_person)" routerLink="/profilepage">{{recommendedUser5.name}}</h4>
 													<span>{{recommendedUser5Status}}</span>
 												</div>
-												<span><i class="la la-plus" (click)="follow(recommendedUser5.id_person)"></i></span>
+												<span><i class="la la-plus" (click)="follow(recommendedUser5.id_person, 5)"></i></span>
 											</div>
-											<div class="suggestion-usd" *ngIf="recommendedUser6.name !== ''">
-												<img class="small-profile-mood" src="./../../assets/images/happy.png" alt="">
+											<div class="suggestion-usd" *ngIf="recommendedUser6.name !== ''  && showRec6 == true">
+												<img class="small-profile-mood" src='{{"./../../assets/images/" + recommendedUser6Emotion + ".png"}}' alt="">
 												<div class="sgt-text">
-													<h4>{{recommendedUser6.name}}</h4>
+													<h4 style="cursor: pointer;"  (click)="setProfilePageID(recommendedUser6.id_person)" routerLink="/profilepage">{{recommendedUser6.name}}</h4>
 													<span>{{recommendedUser6Status}}</span>
 												</div>
-												<span><i class="la la-plus" (click)="follow(recommendedUser6.id_person)"></i></span>
+												<span><i class="la la-plus" (click)="follow(recommendedUser6.id_person, 6)"></i></span>
 											</div>
 											<div class="view-more">
 												<a href="javascript:;" title="" (click)="getAllUsersFromNetwork()">Mehr anzeigen</a>
@@ -396,7 +368,7 @@
 							</div>
 						</div>
 					</div><!-- main-section-data end-->
-				</div> 
+				</div>
 			</div>
 		</main>
 
@@ -408,10 +380,10 @@
 				<h3>Poste deine Stimmung</h3>
 				<div class="post-project-fields">
 					<form>
-						<div class="row">			
+						<div class="row">
 							<div class="col-lg-12">
 								<div class="inp-field">
-									<select style="color: black">
+									<select style="color: black" id="moodSelector">
 										<option value="" disabled selected>Gefühlslage</option>
 										<option value="happy">Glücklich</option>
 										<option value="sad">Traurig</option>
@@ -420,16 +392,19 @@
 								</div>
 							</div>
 							<div class="col-lg-12">
-								<textarea name="description" placeholder="Mir geht es..." style="color: black"></textarea>
+								<textarea id="content" name="description" placeholder="Mir geht es..." style="color: black"></textarea>
                             </div>
                             <div class="col-lg-12">
-								<input type="text" name="skills" placeholder="#happy #sad" style="color: black">
+								<input id="hashtags" (input)="checkForHashtags()" type="text" name="skills" placeholder="#happy #sad" style="color: black" >
 							</div>
 							<div class="col-lg-12">
 								<ul>
-									<li><button class="active" type="submit" value="post">Post</button></li>
+									<li><button class="active" type="button" value="post" (click)="submitPost()">Post</button></li>
 									<li><a href="javascript:;" title="" (click)="removeOverlay()">Cancel</a></li>
 								</ul>
+								<div *ngIf = "notAllPostingFiledFilledOut == true" class="alert alert-danger response fadeIn" role="alert" style="width: 80%; margin: 0px auto 20px auto;">
+									"Gefühlslage und Inhalt des Postings muss ausgefüllt sein!"
+								  </div>
 							</div>
 						</div>
 					</form>
@@ -438,16 +413,16 @@
 			</div><!--post-project end-->
 		</div><!--post-project-popup end-->
 
-		
 
 
 
-		
+
+
 
 	</div><!--theme-layout end-->
 
 
-<!-- 
+<!--
 <script type="text/javascript" src="./../../js/jquery.min.js"></script>
 <script type="text/javascript" src="./../../js/popper.js"></script>
 <script type="text/javascript" src="./../../js/bootstrap.min.js"></script>

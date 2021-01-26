@@ -4,6 +4,7 @@ import { FriendspageComponent } from './friendspage/friendspage.component';
 import { LoginpageComponent } from './loginpage/loginpage.component';
 import { MainpageComponent } from './mainpage/mainpage.component';
 import { ProfilepageComponent } from './profilepage/profilepage.component';
+import { ProfilesettingsComponent } from './profilesettings/profilesettings.component';
 import { RegistrationpageComponent } from './registrationpage/registrationpage.component';
 
 
@@ -21,6 +22,9 @@ const routes: Routes = [
   { path: 'profilepage',
   component: ProfilepageComponent
   },  
+  { path: 'profilesettings',
+  component: ProfilesettingsComponent
+  },    
   {
     path: '',
     component: MainpageComponent

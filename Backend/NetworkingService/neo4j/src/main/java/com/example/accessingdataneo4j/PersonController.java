@@ -18,28 +18,21 @@ public class PersonController {
      *{ "createPerson":
      *     [
      *         {"id":"50",
-     *         "name":"Testuser"}
-     *     ]
-     * }
-     *
-     */
-
-    /**
-     * example payload create HASHTAG
-     *
-     *{ "createPerson":
-     *     [
-     *         {"id":"50",
-     *         "name":"#testhashtag"}
+     *         "name":"test user"}
      *     ]
      * }
      *
      */
     @PostMapping("/createPerson")
     public ResponseEntity createPerson(@RequestBody JsonNode payload) throws JSONException {
+
+        //optional kann hier auch ein hashtag erstellt werden mit dieser methode
+        //allerdings erscheinen diese dann auch in der Farbe der Personen in der neo4j database
+        //besser man erstellt hashtags über createHashtag, falls es nicht zu viel aufwand bedeutet
+
         if(transaction.isHashtag(payload)){
             if(transaction.hashtagExists(transaction.getNameOfHashtag(payload)) || transaction.personExists(transaction.getIdOfPayload(payload))){
-                return getBadRequestResponseEntity("{\"message\":\"ID or Hashtag already exist.\"}");
+                return getBadRequestResponseEntity("{\"message\":\"ID already exist.\"}");
             }else{
                 transaction.create(payload);
                 return ResponseEntity.ok("{ \"message\": \" Hashtag "+ transaction.getNameOfHashtag(payload) +" created\"}");
@@ -55,10 +48,47 @@ public class PersonController {
 
     @PostMapping("/createPerson/{1}/{2}")
     public ResponseEntity createPerson(@PathVariable("1") final int id, @PathVariable("2") final String name){
+        if(transaction.personExists(id)){
+            return getBadRequestResponseEntity("{\"message\":\"ID already exists.\"}");
+        }
         transaction.create(id, name);
-        return ResponseEntity.ok(transaction.getPersonById(id));
+        return ResponseEntity.ok("{ \"message\": \" user "+ id +" created\"}");
     }
 
+    /**
+     * example payload create hashtag
+     *
+     *{ "createHashtag":
+     *     [
+     *         {"id":"#testhashtag"}
+     *     ]
+     * }
+     *
+     */
+    //muss ohne dem Hashtag-Symbol (#) erstellt werden, da eine URI kein #-Symbol
+    // beinhalten darf, das bei followHashtag notwendig ist
+    @PostMapping("/createHashtag")
+    public ResponseEntity createHashtag(@RequestBody JsonNode payload) throws JSONException {
+//        if(!transaction.isHashtag(payload)){
+//            return getBadRequestResponseEntity("{\"message\":\"No # detected.\"}");
+//        }else{
+            if(transaction.hashtagExists(transaction.getHashtagId(payload))){
+                return ResponseEntity.ok("{\"message\":\"Hashtag already exist.\"}");
+            }else{
+                transaction.createHashtag(payload);
+                return ResponseEntity.ok("{ \"message\": \" Hashtag "+ transaction.getHashtagId(payload) +" created\"}");
+            }
+//        }
+    }
+
+    @PostMapping("/createHashtag/{1}")
+    public ResponseEntity createHashtag(@PathVariable("1") final String id) {
+        if(transaction.hashtagExists(id)) {
+            return ResponseEntity.ok("{\"message\":\"Hashtag already exist.\"}");
+        }
+            transaction.createHashtag(id);
+            return ResponseEntity.ok("{ \"message\": \" Hashtag " + id + " created\"}");
+    }
 
 
     /**
@@ -67,28 +97,49 @@ public class PersonController {
      * { ".follow":
      *     [
      *         {"id_from":"5",
-     *         "name_from":"Franz",
-     *         "id_to":"6",
-     *         "name_to":"Sepp"}
+     *         "id_to":"6"}
      *     ]
      * }
      *
      */
     @PostMapping("/follow")
-    public ResponseEntity follow(@RequestBody JsonNode payload) throws JSONException {
-        if(transaction.personExists(transaction.getIdOfPayload(payload))){
-            transaction.follow(payload);
-            return ResponseEntity.ok("{ Following generated " + payload +"}");
+    public ResponseEntity followPerson(@RequestBody JsonNode payload) throws JSONException {
+        if(!transaction.personExists(transaction.getIdOfPayload(payload))){
+            return getBadRequestResponseEntity("{\"message\":\"One of these IDs does not exist.\"}");
         }
-        return getBadRequestResponseEntity("{\"message\":\"One of these IDs does not exist.\"}");
+        transaction.follow(payload);
+        return ResponseEntity.ok("{ Following generated " + payload +"}");
     }
 
     @PostMapping("/followById/{1}/{2}")
-    public ResponseEntity follow(@PathVariable("1") int id1, @PathVariable("2") int id2) {
-        transaction.follow(id1, id2);
+    public ResponseEntity followPersonById(@PathVariable("1") int id1, @PathVariable("2") int id2) {
+        if(!transaction.personExists(id1)){
+            return getBadRequestResponseEntity("{\"message\":\"ID " + id1 + " does not exist.\"}");
+        }
+        if(!transaction.personExists(id2)){
+            return getBadRequestResponseEntity("{\"message\":\"ID " + id2 + " does not exist.\"}");
+        }
+
+        transaction.followPerson(id1, id2);
         return ResponseEntity.ok("{ \"message\": \""+id1 + " follows " + id2 + "\"}");
     }
 
+
+    /**
+     * example follow hashtag http://localhost:8083/neo4j/followById/5/austria
+     */
+    @PostMapping("/followHashtag/{1}/{2}")
+    public ResponseEntity followHashtagById(@PathVariable("1") int id1, @PathVariable("2") String id2) {
+        if(!transaction.personExists(id1)){
+            return getBadRequestResponseEntity("{\"message\":\"ID " + id1 + " does not exist.\"}");
+        }
+        if(!transaction.hashtagExists(id2)){
+            return getBadRequestResponseEntity("{\"message\":\"ID " + id2 + " does not exist.\"}");
+        }
+
+        transaction.followHashtag(id1, id2);
+        return ResponseEntity.ok("{ \"message\": \""+id1 + " follows " + id2 + "\"}");
+    }
 
 
     /**
@@ -115,8 +166,28 @@ public class PersonController {
 
     @DeleteMapping("/unfollowById/{1}/{2}")
     public ResponseEntity unfollow(@PathVariable("1") int id1, @PathVariable("2") int id2){
-        transaction.unfollow(id1, id2);
-        return ResponseEntity.ok(transaction.getPersonById(id1));
+        if(!transaction.personExists(id1)){
+            return getBadRequestResponseEntity("{\"message\":\"ID " + id1 + " does not exist.\"}");
+        }
+        if(!transaction.personExists(id2)){
+            return getBadRequestResponseEntity("{\"message\":\"ID " + id2 + " does not exist.\"}");
+        }
+
+        transaction.unfollowPerson(id1, id2);
+        return ResponseEntity.ok("{\"message\":\"Unfollowing done.\"}");
+    }
+
+    @DeleteMapping("/unfollowHashtag/{1}/{2}")
+    public ResponseEntity unfollow(@PathVariable("1") int id1, @PathVariable("2") String id2){
+        if(!transaction.personExists(id1)){
+            return getBadRequestResponseEntity("{\"message\":\"ID " + id1 + " does not exist.\"}");
+        }
+        if(!transaction.hashtagExists(id2)){
+            return getBadRequestResponseEntity("{\"message\":\"ID " + id2 + " does not exist.\"}");
+        }
+
+        transaction.unfollowHashtag(id1, id2);
+        return ResponseEntity.ok("{\"message\":\"Unfollowing done.\"}");
     }
 
 
@@ -124,11 +195,10 @@ public class PersonController {
     /**
      * example payload update
      *
-     * { "updateperson":
+     * { "updatePerson":
      *     [
      *         {"id_pre":"5",
-     *         "name_pre":"Franz",
-     *         "name_post":"Franzi"}
+     *         "new_name":"Franzerl"}
      *     ]
      * }
      *
@@ -147,10 +217,9 @@ public class PersonController {
     /**
      * example payload delete
      *
-     *{ "deleteperson":
+     *{ "deletePerson":
      *     [
-     *         {"id":"50",
-     *         "name":"Testuser"}
+     *         {"id":"50"}
      *     ]
      * }
      *
@@ -159,16 +228,18 @@ public class PersonController {
     public ResponseEntity deletePerson(@RequestBody JsonNode payload) throws JSONException {
         if(transaction.personExists(transaction.getIdOfPayload(payload))){
             transaction.delete(payload);
-            return ResponseEntity.ok("DELETED: " + payload);
+            return ResponseEntity.ok("{\"message\":\"" + payload + " deleted.\"}");
         }
         return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
     }
 
     @DeleteMapping("/deletePersonById/{1}")
     public ResponseEntity deletePersonById(@PathVariable("1") final int id){
-        transaction.delete(id);
-        if(!transaction.personExists(id)) return ResponseEntity.ok("{\"message\": \"ID " + id + "\" deleted.\"}");
-        return getBadRequestResponseEntity("");
+        if(transaction.personExists(id)){
+            transaction.delete(id);
+            return ResponseEntity.ok("{\"message\":\" id " + id + " deleted.\"}");
+        }
+        return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
     }
 
     /**
@@ -186,10 +257,10 @@ public class PersonController {
     public ResponseEntity getMySubs(@RequestBody JsonNode payload) throws JSONException {
         if(transaction.personExists(transaction.getIdOfPayload(payload))){
             if(transaction.getSubscriptions(transaction.getIdOfPayload(payload)).isEmpty()){
-                return getBadRequestResponseEntity("{[]}");
+                return ResponseEntity.ok("{\"subscriptions\": [] }");
             }
-            return ResponseEntity.ok("My subscriptions: " +
-                    transaction.getSubscriptions(transaction.getIdOfPayload(payload)).toString());
+            return ResponseEntity.ok("{\"subscriptions\": " +
+                            transaction.getSubscriptions(transaction.getIdOfPayload(payload)).toString() + "}");
         }
         return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
     }
@@ -198,10 +269,31 @@ public class PersonController {
     public ResponseEntity getMySubsById(@PathVariable("1") final int id){
         if(transaction.personExists(id)){
             if(transaction.getSubscriptions(id).isEmpty()){
-                return getBadRequestResponseEntity("{[]}");
+                return ResponseEntity.ok("{\"subscriptions\": [] }");
             }
-            return ResponseEntity.ok("My subscriptions: " +
-                    transaction.getSubscriptions(id).toString());
+            return ResponseEntity.ok("{\"subscriptions\": " +
+                    transaction.getSubscriptions(id).toString() + "}");
+        }
+        return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
+    }
+
+    @GetMapping("/subscribedHashtags/{1}")
+    public ResponseEntity getMySubscribedHashtags(@PathVariable("1") final int id){
+        if(transaction.personExists(id)){
+            if(transaction.getSubscribedHashtags(id).isEmpty()){
+                return ResponseEntity.ok("{\"subscriptions\": [] }");
+            }
+            String returnValue = "[";
+            List message = transaction.getSubscribedHashtags(id);
+            for(int i = 0; i<message.size(); i++){
+                returnValue += "\"";
+                returnValue += message.get(i);
+                returnValue += "\", ";
+            }
+            returnValue = returnValue.substring(0, returnValue.length()-2);
+            returnValue += "]";
+            return ResponseEntity.ok("{\"subscriptions\": " +
+                    returnValue + "}");
         }
         return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
     }
@@ -213,8 +305,7 @@ public class PersonController {
      *
      *{ "follower":
      *     [
-     *         {"id":"50",
-     *         "name":"Testuser"}
+     *         {"id":"5"}
      *     ]
      * }
      *
@@ -223,10 +314,10 @@ public class PersonController {
     public ResponseEntity getMyFollower(@RequestBody JsonNode payload) throws JSONException {
         if(transaction.personExists(transaction.getIdOfPayload(payload))){
             if(transaction.getFollowers(transaction.getIdOfPayload(payload)).isEmpty()){
-                return getBadRequestResponseEntity("{[]}");
+                return ResponseEntity.ok("{[]}");
             }
-            return ResponseEntity.ok("{ My followers: " +
-                    transaction.getFollowers(transaction.getIdOfPayload(payload)).toString() + "}");
+            return ResponseEntity.ok("{\"followers\": " +
+                    transaction.getFollowers(transaction.getIdOfPayload(payload)).toString() + "\"}");
         }
         return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
     }
@@ -235,9 +326,9 @@ public class PersonController {
     public ResponseEntity getMyFollower(@PathVariable("1") final int id){
         if(transaction.personExists(id)){
             if(transaction.getFollowers(id).isEmpty()){
-                return getBadRequestResponseEntity("{[]}");
+                return ResponseEntity.ok("{\"followers\": []}");
             }
-            return ResponseEntity.ok("{ My followers: " +
+            return ResponseEntity.ok("{\"followers\": " +
                     transaction.getFollowers(id).toString() + "}");
         }
         return getBadRequestResponseEntity("{\"message\":\"ID does not exist.\"}");
@@ -252,12 +343,15 @@ public class PersonController {
     }
 
 
-
     @GetMapping("/allPersons")
     public List<Person> getPersons(){
         return transaction.getAllPersons();
     }
 
+    @GetMapping("/allHashtags")
+    public List<Hashtag> getHashtags(){
+        return transaction.getAllHashtags();
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity getPersonById(@PathVariable int id){
@@ -268,8 +362,6 @@ public class PersonController {
     }
 
     private ResponseEntity getBadRequestResponseEntity(final String errorMessage) {
-        return new ResponseEntity(
-                HttpStatus.BAD_REQUEST + " - " + errorMessage,
-                HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
     }
 }

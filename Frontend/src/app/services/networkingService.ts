@@ -18,16 +18,7 @@ export class networkingService
     
     constructor(private httpclient: HttpClient) {}
 
-    // getAllHTTP(): Observable<any> {
-    //     return this.httpclient.get(apiurl);
-    // }
-
-
-    // async getByShortURLHTTP(shortURL:string): Promise<Observable<any>> {
-    //     //var param = (<HTMLInputElement>document.getElementById("sURL")).value;
-    //     return await this.httpclient.get(apiurl+shortURL);
-    // }
-    async getUserFromNetwork(id: Number): Promise<Observable<any>> {
+    async getUserFromNetwork(id): Promise<Observable<any>> {
         return await this.httpclient.get(apiurl+id);
     }
 
@@ -39,6 +30,14 @@ export class networkingService
         return await this.httpclient.post(apiurl + "followById/" + originID + "/" + targetID, null);
     }
 
+    async followHashtag(originID, targetID): Promise<Observable<any>> {
+        return await this.httpclient.post(apiurl + "followHashtag/" + originID + "/" + targetID, null);
+    }
+
+    async unfollowUserInNetwork(originID, targetID): Promise<Observable<any>> {
+        return await this.httpclient.delete(apiurl + "unfollowById/" + originID + "/" + targetID);
+    }
+
     async deleteUserFromNetwork(user): Promise<Observable<any>> {
         return await this.httpclient.delete(apiurl + "deletePersonById/" + user);
     }
@@ -47,5 +46,24 @@ export class networkingService
         return await this.httpclient.get(apiurl+"allPersons");
     }
 
+    async getFollowersOfUserFromNetwork(id: Number): Promise<Observable<any>> {
+        return await this.httpclient.get(apiurl+"follower/"+id);
+    }
 
+    async addHashtagToNetwork(hashtag): Promise<Observable<any>> {
+        return await this.httpclient.post(apiurl + "createHashtag/" + hashtag, null);
+    }
+
+    async getSubscriptionsOfUserFromNetwork(id): Promise<Observable<any>> {
+        return await this.httpclient.get(apiurl+"subscriptions/"+id);
+    }
+
+    async getSubscriptionsOfHashtagsFromNetwork(id): Promise<Observable<any>> {
+        return await this.httpclient.get(apiurl+"subscribedHashtags/"+id);
+    }
+
+    async getAllHashtags(): Promise<Observable<any>> {
+        return await this.httpclient.get(apiurl+"allHashtags");
+    }
+    
 }
