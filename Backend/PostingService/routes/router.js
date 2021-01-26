@@ -1,5 +1,6 @@
 var User = require('../model/User');
 var Post = require('../model/Posting')
+const amqp = require('amqplib/callback_api');
 
 module.exports = function(app, express)
 {
