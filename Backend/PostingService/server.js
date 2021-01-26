@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const config = require('./config')
+const config = require('./config');
 const mongoose = require('mongoose');
 //const { eventNames } = require('../LoginRegistrationService/util/database');
 
@@ -10,6 +10,8 @@ mongoose.connect(config.database, {
     useUnifiedTopology: true,
     useNewUrlParser: true
 });
+
+
 
 
 var db = mongoose.connection;
@@ -39,4 +41,6 @@ app.listen(config.port, function(err) {
     }
 
 });
+
+
 

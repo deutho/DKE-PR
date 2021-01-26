@@ -7,35 +7,36 @@ module.exports = function(app, express)
     var router = express.Router();
 
 
-    router.post('/login', function(req, res){
-        var user = new User({
-            id: req.body.id,
-            name: req.body.name,
-            password: req.body.password,
-        });
-
-        user.save(function(err){
-            if(err){
-                res.send(err);
-                return;
+    amqp.connect(config.messagebroker,function(err, connection){
+        if(err){
+            throw err;
+        }
+    
+        connection.createChannel(function(errCh, channel){
+            if(errCh){
+                throw errCh;
             }
-
-            res.json({message: 'User has been created'});
+    
+            var qeue = 'postings';
+    
+            channel.assertQueue(qeue, {
+            durable: false
+            });
+       
+        channel.consume(qeue, function(msg) {
+            console.log(" [x] Received %s", msg.content.toString());
+            const qm = msg.content.toString();
+            console.log(qm);
+        
+          }, {
+              noAck: true
+            });
+    
+       
         });
     });
 
-    router.get('/users', function(req, res){
-
-        User.find({},function(err,users){
-            if(err){
-                res.send(err);
-                return;
-            }
-            
-            res.json(users);
-        });
-    });
-
+    
 
     router.post("/create", function(req, res){
         console.log(req.body.creator)
@@ -83,6 +84,9 @@ module.exports = function(app, express)
         res.redirect('/');
         res.json({message: "Post deleted"});
     });
+
+
+ 
 
     return router;
 }
