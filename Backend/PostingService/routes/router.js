@@ -13,6 +13,7 @@ module.exports = function(app, express)
 
     amqp.connect(config.messagebroker,function(err, connection){
         if(err){
+            console.log("cannot connect to message broker")
             throw err;
         }
     
